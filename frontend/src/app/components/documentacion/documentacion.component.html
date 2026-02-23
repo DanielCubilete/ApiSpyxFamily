@@ -1,0 +1,148 @@
+<div class="docs-container">
+  <div class="docs-header">
+    <h1>📚 Documentación API - Spy x Family</h1>
+    <p class="docs-subtitle">API REST para gestionar información de Spy x Family</p>
+    <div class="docs-info">
+      <span class="info-badge">Versión 1.0.0</span>
+      <span class="info-badge">Base URL: {{ baseUrl }}</span>
+    </div>
+  </div>
+
+  <div class="docs-content">
+    <!-- Introducción -->
+    <section class="docs-section">
+      <h2>Introducción</h2>
+      <p>Esta API proporciona acceso a información completa sobre el anime y manga Spy x Family, incluyendo temporadas, episodios, personajes y tomos.</p>
+      <p>Todas las respuestas están en formato JSON y siguen una estructura consistente.</p>
+    </section>
+
+    <!-- Formato de respuesta -->
+    <section class="docs-section">
+      <h2>Formato de Respuesta</h2>
+      <div class="code-block">
+        <pre>{{'{'}}<br>  "success": true,<br>  "count": 10,  // Solo en listados<br>  "data": {{'{...}'}} o [...]<br>{{'}'}}</pre>
+      </div>
+    </section>
+
+    <!-- Endpoints por categoría -->
+    <section class="docs-section" *ngFor="let category of endpoints | keyvalue">
+      <h2>{{ category.key }}</h2>
+      
+      <div class="endpoint-card" *ngFor="let endpoint of category.value">
+        <div class="endpoint-header">
+          <span class="method-badge" [ngClass]="getMethodClass(endpoint.method)">
+            {{ endpoint.method }}
+          </span>
+          <span class="endpoint-path">{{ endpoint.path }}</span>
+        </div>
+        
+        <p class="endpoint-description">{{ endpoint.description }}</p>
+        
+        <div class="endpoint-example">
+          <div class="example-header">
+            <strong>Ejemplo:</strong>
+            <button class="btn-copy" (click)="copyToClipboard(endpoint.example!)" title="Copiar URL">
+              📋
+            </button>
+            <button class="btn-test" (click)="testEndpoint(endpoint.example!)" title="Probar endpoint">
+              ▶️ Probar
+            </button>
+          </div>
+          <div class="code-inline">{{ endpoint.example }}</div>
+        </div>
+        
+        <div class="endpoint-response">
+          <strong>Respuesta esperada:</strong>
+          <div class="code-block"><pre>{{ endpoint.response }}</pre></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección de pruebas -->
+    <section class="docs-section test-section" *ngIf="testingEndpoint">
+      <h2>🧪 Probar Endpoint</h2>
+      <div class="test-panel">
+        <div class="test-url">
+          <strong>URL:</strong> {{ testingEndpoint }}
+        </div>
+        
+        <div class="test-loading" *ngIf="testingLoading">
+          <div class="spinner"></div>
+          Cargando...
+        </div>
+
+        <div class="test-error" *ngIf="testingError">
+          <strong>❌ Error:</strong>
+          <p>{{ testingError }}</p>
+        </div>
+
+        <div class="test-response" *ngIf="testingResponse">
+          <div class="response-header">
+            <strong>✅ Respuesta:</strong>
+            <button class="btn-copy" (click)="copyResponseJson()">
+              📋 Copiar JSON
+            </button>
+          </div>
+          <div class="code-block">
+            <pre>{{ testingResponse | json }}</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ejemplos de uso -->
+    <section class="docs-section">
+      <h2>Ejemplos de Uso</h2>
+      
+      <h3>JavaScript (Fetch API)</h3>
+      <div class="code-block">
+        <pre>fetch('{{ baseUrl }}/episodios')
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error(error));</pre>
+      </div>
+
+      <h3>cURL</h3>
+      <div class="code-block">
+        <pre>curl -X GET {{ baseUrl }}/episodios</pre>
+      </div>
+
+      <h3>Angular HttpClient</h3>
+      <div class="code-block">
+        <pre>this.http.get('{{ baseUrl }}/episodios')
+  .subscribe({{'{'}}<br>    next: (data) => console.log(data),<br>    error: (error) => console.error(error)<br>  {{'}'}});</pre>
+      </div>
+    </section>
+
+    <!-- Códigos de estado -->
+    <section class="docs-section">
+      <h2>Códigos de Estado HTTP</h2>
+      <table class="status-table">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Significado</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="status-badge status-200">200</span></td>
+            <td>OK</td>
+            <td>La petición fue exitosa</td>
+          </tr>
+          <tr>
+            <td><span class="status-badge status-404">404</span></td>
+            <td>Not Found</td>
+            <td>El recurso no fue encontrado</td>
+          </tr>
+          <tr>
+            <td><span class="status-badge status-500">500</span></td>
+            <td>Internal Server Error</td>
+            <td>Error del servidor</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</div>

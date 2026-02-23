@@ -1,0 +1,140 @@
+<div class="container mt-4">
+  <div class="row" *ngIf="temporada">
+    <div class="col-lg-10 offset-lg-1">
+      <!-- Card principal de información -->
+      <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+          <h3 class="mb-0">📺 Temporada {{ temporada.numero_temporada }}: {{ temporada.titulo }}</h3>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h5 class="text-muted mb-3">Información General</h5>
+              <table class="table table-borderless">
+                <tbody>
+                  <tr>
+                    <th style="width: 40%;">Número de Temporada:</th>
+                    <td><strong>{{ temporada.numero_temporada }}</strong></td>
+                  </tr>
+                  <tr>
+                    <th>Título:</th>
+                    <td>{{ temporada.titulo }}</td>
+                  </tr>
+                  <tr>
+                    <th>Número de Episodios:</th>
+                    <td>{{ temporada.numero_episodios }}</td>
+                  </tr>
+                  <tr>
+                    <th>Estudio de Animación:</th>
+                    <td>{{ temporada.estudio_animacion }}</td>
+                  </tr>
+                  <tr>
+                    <th>Estado:</th>
+                    <td>
+                      <span [ngClass]="getEstadoBadgeClass(temporada.estado)">
+                        {{ temporada.estado }}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="col-md-6">
+              <h5 class="text-muted mb-3">Fechas</h5>
+              <table class="table table-borderless">
+                <tbody>
+                  <tr>
+                    <th style="width: 40%;">Fecha de Estreno:</th>
+                    <td>{{ temporada.fecha_estreno | date:'dd/MM/yyyy' }}</td>
+                  </tr>
+                  <tr>
+                    <th>Fecha de Finalización:</th>
+                    <td>{{ temporada.fecha_finalizacion ? (temporada.fecha_finalizacion | date:'dd/MM/yyyy') : 'Por determinar' }}</td>
+                  </tr>
+                  <tr>
+                    <th>Creado:</th>
+                    <td>{{ temporada.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+                  </tr>
+                  <tr>
+                    <th>Última Actualización:</th>
+                    <td>{{ temporada.updatedAt | date:'dd/MM/yyyy HH:mm' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <hr>
+          
+          <div class="row">
+            <div class="col-12">
+              <h5 class="text-muted mb-3">Descripción</h5>
+              <p class="lead">{{ temporada.descripcion }}</p>
+            </div>
+          </div>
+
+          <div class="d-flex gap-2 mt-4">
+            <button class="btn btn-secondary" (click)="volver()">
+              ← Volver
+            </button>
+            <button class="btn btn-danger" (click)="eliminar()">
+              🗑️ Eliminar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card de episodios -->
+      <div class="card" *ngIf="temporada.episodios && temporada.episodios.length > 0">
+        <div class="card-header bg-info text-white">
+          <h4 class="mb-0">🎬 Episodios de la Temporada ({{ temporada.episodios.length }})</h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Episodio</th>
+                  <th>Título</th>
+                  <th>Duración</th>
+                  <th>Fecha de Emisión</th>
+                  <th>Valoración</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let episodio of temporada.episodios">
+                  <td><strong>{{ episodio.numero_episodio }}</strong></td>
+                  <td>{{ episodio.titulo }}</td>
+                  <td>{{ episodio.duracion_minutos }} min</td>
+                  <td>{{ episodio.fecha_emision | date:'dd/MM/yyyy' }}</td>
+                  <td>
+                    <span *ngIf="episodio.valoracion">⭐ {{ episodio.valoracion }}/10</span>
+                    <span *ngIf="!episodio.valoracion" class="text-muted">-</span>
+                  </td>
+                  <td>
+                    <button 
+                      class="btn btn-sm btn-info" 
+                      [routerLink]="['/episodios', episodio._id]"
+                      title="Ver detalle">
+                      👁️ Ver
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mensaje si no hay episodios -->
+      <div class="alert alert-warning mt-4" *ngIf="temporada && temporada.episodios && temporada.episodios.length === 0">
+        <strong>⚠️ No hay episodios registrados para esta temporada</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-warning mt-4" *ngIf="!temporada">
+    <strong>⚠️ Temporada no encontrada</strong>
+  </div>
+</div>

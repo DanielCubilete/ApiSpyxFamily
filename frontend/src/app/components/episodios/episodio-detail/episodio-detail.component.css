@@ -1,0 +1,14 @@
+.card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  color: white;
+}
+
+table th {
+  width: 30%;
+  font-weight: 600;
+  color: #6c757d;
+}

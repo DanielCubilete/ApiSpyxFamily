@@ -1,0 +1,55 @@
+.temporada-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.temporada-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.temporada-card .card-img-top {
+  border-radius: 0.375rem 0.375rem 0 0;
+}
+
+.temporada-card .card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #212529;
+}
+
+.temporada-card .card-text {
+  font-size: 0.95rem;
+  color: #6c757d;
+}
+
+.text-truncate-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.5;
+}
+
+.temporada-card .card-footer {
+  padding: 0.75rem 1rem;
+}
+
+.temporada-card .btn {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.bi {
+  margin-right: 0.25rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .temporada-card .card-img-top {
+    height: 300px !important;
+  }
+}
+

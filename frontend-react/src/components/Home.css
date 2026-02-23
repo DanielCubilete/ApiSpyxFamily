@@ -1,0 +1,32 @@
+.home-container {
+  padding: 20px;
+}
+
+.hero-section {
+  text-align: center;
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 10px;
+  margin-bottom: 30px;
+}
+
+.icon-large {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.card-hover {
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2) !important;
+}

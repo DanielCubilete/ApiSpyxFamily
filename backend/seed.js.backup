@@ -1,0 +1,575 @@
+require('dotenv').config();
+const mongoose = require('mongoose');
+const connectDB = require('./src/config/database');
+
+// Importar modelos
+const Temporada = require('./src/models/temporada.model');
+const Episodio = require('./src/models/episodio.model');
+const Personaje = require('./src/models/personaje.model');
+const Tomo = require('./src/models/tomo.model');
+
+// Datos de temporadas
+const temporadas = [
+    {
+        numero_temporada: 1,
+        titulo: "Temporada 1",
+        descripcion: "La familia Forger comienza su misión de infiltración en la Operación Strix. El espía Twilight debe formar una familia falsa para acercarse a su objetivo.",
+        fecha_estreno: new Date('2022-04-09'),
+        fecha_finalizacion: new Date('2022-06-25'),
+        numero_episodios: 12,
+        estudio_animacion: "Wit Studio, CloverWorks",
+        estado: "emitida"
+    },
+    {
+        numero_temporada: 2,
+        titulo: "Temporada 2",
+        descripcion: "La familia Forger enfrenta nuevos desafíos mientras Anya avanza en la Academia Eden y los secretos de cada miembro se vuelven más difíciles de ocultar.",
+        fecha_estreno: new Date('2022-10-01'),
+        fecha_finalizacion: new Date('2022-12-24'),
+        numero_episodios: 13,
+        estudio_animacion: "Wit Studio, CloverWorks",
+        estado: "emitida"
+    },
+    {
+        numero_temporada: 3,
+        titulo: "Temporada 3",
+        descripcion: "Nuevas misiones ponen a prueba la cohesión de la familia Forger mientras continúan manteniendo sus identidades secretas.",
+        fecha_estreno: new Date('2024-04-13'),
+        fecha_finalizacion: null,
+        numero_episodios: 12,
+        estudio_animacion: "Wit Studio, CloverWorks",
+        estado: "en emisión"
+    }
+];
+
+// Datos de personajes
+const personajes = [
+    {
+        nombre: "Loid Forger",
+        alias: "Twilight",
+        edad: 27,
+        rol: "principal",
+        descripcion: "Espía de élite de Westalis conocido como Twilight. Maestro del disfraz y la infiltración, debe formar una familia falsa para la Operación Strix.",
+        habilidades: ["Espionaje", "Disfraces", "Combate cuerpo a cuerpo", "Análisis táctico", "Medicina"],
+        organizacion: "WISE"
+    },
+    {
+        nombre: "Yor Forger",
+        alias: "Thorn Princess",
+        edad: 27,
+        rol: "principal",
+        descripcion: "Asesina profesional conocida como la Princesa de las Espinas. Trabaja como empleada del ayuntamiento mientras realiza misiones de asesinato en secreto.",
+        habilidades: ["Combate cuerpo a cuerpo", "Agilidad extrema", "Uso de armas punzocortantes", "Resistencia"],
+        organizacion: "Garden"
+    },
+    {
+        nombre: "Anya Forger",
+        alias: null,
+        edad: 6,
+        rol: "principal",
+        descripcion: "Niña con poderes telepáticos adoptada por Loid. Fue sujeto de experimentos del Proyecto Apple, lo que le otorgó la habilidad de leer mentes.",
+        habilidades: ["Telepatía", "Dibujo", "Carisma"],
+        organizacion: null
+    },
+    {
+        nombre: "Bond Forger",
+        alias: "Subject 8",
+        edad: null,
+        rol: "principal",
+        descripcion: "Perro de raza gran pirineo con poderes precognitivos. Fue rescatado por Anya y adoptado por la familia Forger.",
+        habilidades: ["Precognición", "Fuerza superior", "Lealtad"],
+        organizacion: null
+    },
+    {
+        nombre: "Franky Franklin",
+        alias: null,
+        edad: 30,
+        rol: "secundario",
+        descripcion: "Informante y amigo de Loid. Trabaja como vendedor de tabaco mientras recopila información para las misiones de WISE.",
+        habilidades: ["Obtención de información", "Falsificación de documentos", "Contactos en el mercado negro"],
+        organizacion: "WISE"
+    },
+    {
+        nombre: "Yuri Briar",
+        alias: null,
+        edad: 20,
+        rol: "secundario",
+        descripcion: "Hermano menor de Yor y oficial de la Policía Secreta de Ostania. Tiene un complejo de hermana y busca protegerla a toda costa.",
+        habilidades: ["Interrogatorio", "Combate", "Investigación", "Resistencia al alcohol"],
+        organizacion: "SSS"
+    },
+    {
+        nombre: "Damian Desmond",
+        alias: null,
+        edad: 6,
+        rol: "secundario",
+        descripcion: "Hijo del objetivo de la Operación Strix. Estudiante de la Academia Eden y rival/interés romántico de Anya.",
+        habilidades: ["Inteligencia académica", "Liderazgo", "Deportes"],
+        organizacion: null
+    },
+    {
+        nombre: "Becky Blackbell",
+        alias: null,
+        edad: 6,
+        rol: "secundario",
+        descripcion: "Mejor amiga de Anya en la Academia Eden. Proviene de una familia extremadamente rica y es muy madura para su edad.",
+        habilidades: ["Conocimientos de moda", "Etiqueta social", "Inteligencia emocional"],
+        organizacion: null
+    },
+    {
+        nombre: "Henry Henderson",
+        alias: null,
+        edad: 66,
+        rol: "recurrente",
+        descripcion: "Profesor de Historia en la Academia Eden. Valora la elegancia y los buenos modales por encima de todo.",
+        habilidades: ["Enseñanza", "Etiqueta", "Historia"],
+        organizacion: "Academia Eden"
+    },
+    {
+        nombre: "Sylvia Sherwood",
+        alias: "Handler",
+        edad: null,
+        rol: "secundario",
+        descripcion: "Superiora de Loid en WISE. Coordinadora de operaciones y estratega experimentada.",
+        habilidades: ["Estrategia", "Gestión de operaciones", "Inteligencia"],
+        organizacion: "WISE"
+    },
+    {
+        nombre: "Fiona Frost",
+        alias: "Nightfall",
+        edad: 23,
+        rol: "recurrente",
+        descripcion: "Compañera espía de Loid en WISE. Está secretamente enamorada de él y desea reemplazar a Yor como su esposa falsa.",
+        habilidades: ["Espionaje", "Combate", "Resistencia extrema", "Análisis"],
+        organizacion: "WISE"
+    },
+    {
+        nombre: "Emile Elman",
+        alias: null,
+        edad: 6,
+        rol: "recurrente",
+        descripcion: "Compañero de clase de Anya y mejor amigo de Damian. Proviene de una familia influyente.",
+        habilidades: ["Lealtad", "Deportes"],
+        organizacion: null
+    },
+    {
+        nombre: "Ewen Egeburg",
+        alias: null,
+        edad: 6,
+        rol: "recurrente",
+        descripcion: "Compañero de clase de Anya y seguidor de Damian. Siempre está junto a Emile.",
+        habilidades: ["Lealtad", "Trabajo en equipo"],
+        organizacion: null
+    },
+    {
+        nombre: "Martha Marriott",
+        alias: null,
+        edad: null,
+        rol: "recurrente",
+        descripcion: "Empleada servil de la familia Blackbell. Tiene un pasado misterioso como soldado.",
+        habilidades: ["Combate", "Servicio doméstico", "Artes marciales"],
+        organizacion: null
+    },
+    {
+        nombre: "George Glooman",
+        alias: null,
+        edad: 6,
+        rol: "recurrente",
+        descripcion: "Compañero de clase de Anya. Le gusta mucho leer y usar gafas elegantes.",
+        habilidades: ["Lectura", "Investigación"],
+        organizacion: null
+    }
+];
+
+// Datos de tomos del manga
+const tomos = [
+    {
+        numero_tomo: 1,
+        titulo: "Spy x Family, Vol. 1",
+        isbn: "978-1974715657",
+        fecha_publicacion: new Date('2019-07-04'),
+        numero_capitulos: 5,
+        paginas: 216,
+        precio: 9.99,
+        editorial: "Shueisha"
+    },
+    {
+        numero_tomo: 2,
+        titulo: "Spy x Family, Vol. 2",
+        isbn: "978-1974715664",
+        fecha_publicacion: new Date('2019-10-04'),
+        numero_capitulos: 5,
+        paginas: 200,
+        precio: 9.99,
+        editorial: "Shueisha"
+    },
+    {
+        numero_tomo: 3,
+        titulo: "Spy x Family, Vol. 3",
+        isbn: "978-1974715671",
+        fecha_publicacion: new Date('2020-01-04'),
+        numero_capitulos: 5,
+        paginas: 208,
+        precio: 9.99,
+        editorial: "Shueisha"
+    },
+    {
+        numero_tomo: 4,
+        titulo: "Spy x Family, Vol. 4",
+        isbn: "978-1974715688",
+        fecha_publicacion: new Date('2020-04-03'),
+        numero_capitulos: 5,
+        paginas: 192,
+        precio: 9.99,
+        editorial: "Shueisha"
+    },
+    {
+        numero_tomo: 5,
+        titulo: "Spy x Family, Vol. 5",
+        isbn: "978-1974715695",
+        fecha_publicacion: new Date('2020-07-03'),
+        numero_capitulos: 5,
+        paginas: 200,
+        precio: 9.99,
+        editorial: "Shueisha"
+    },
+    {
+        numero_tomo: 6,
+        titulo: "Spy x Family, Vol. 6",
+        isbn: "978-1974721481",
+        fecha_publicacion: new Date('2020-11-04'),
+        numero_capitulos: 5,
+        paginas: 192,
+        precio: 9.99,
+        editorial: "Shueisha"
+    },
+    {
+        numero_tomo: 7,
+        titulo: "Spy x Family, Vol. 7",
+        isbn: "978-1974721498",
+        fecha_publicacion: new Date('2021-01-05'),
+        numero_capitulos: 5,
+        paginas: 208,
+        precio: 9.99,
+        editorial: "Shueisha"
+    },
+    {
+        numero_tomo: 8,
+        titulo: "Spy x Family, Vol. 8",
+        isbn: "978-1974721504",
+        fecha_publicacion: new Date('2021-05-04'),
+        numero_capitulos: 5,
+        paginas: 200,
+        precio: 9.99,
+        editorial: "Shueisha"
+    },
+    {
+        numero_tomo: 9,
+        titulo: "Spy x Family, Vol. 9",
+        isbn: "978-1974721511",
+        fecha_publicacion: new Date('2021-10-05'),
+        numero_capitulos: 5,
+        paginas: 192,
+        precio: 9.99,
+        editorial: "Shueisha"
+    },
+    {
+        numero_tomo: 10,
+        titulo: "Spy x Family, Vol. 10",
+        isbn: "978-1974728756",
+        fecha_publicacion: new Date('2022-03-01'),
+        numero_capitulos: 5,
+        paginas: 200,
+        precio: 9.99,
+        editorial: "Shueisha"
+    },
+    {
+        numero_tomo: 11,
+        titulo: "Spy x Family, Vol. 11",
+        isbn: "978-1974732463",
+        fecha_publicacion: new Date('2022-10-04'),
+        numero_capitulos: 5,
+        paginas: 208,
+        precio: 9.99,
+        editorial: "Shueisha"
+    },
+    {
+        numero_tomo: 12,
+        titulo: "Spy x Family, Vol. 12",
+        isbn: "978-1974736546",
+        fecha_publicacion: new Date('2023-03-07'),
+        numero_capitulos: 5,
+        paginas: 192,
+        precio: 9.99,
+        editorial: "Shueisha"
+    },
+    {
+        numero_tomo: 13,
+        titulo: "Spy x Family, Vol. 13",
+        isbn: "978-1974741663",
+        fecha_publicacion: new Date('2023-10-03'),
+        numero_capitulos: 5,
+        paginas: 200,
+        precio: 9.99,
+        editorial: "Shueisha"
+    }
+];
+
+// Función para crear episodios (se ejecutará después de crear temporadas)
+async function crearEpisodios(temporadasCreadas) {
+    const episodios = [
+        // Temporada 1
+        {
+            numero_episodio: 1,
+            titulo: "Operación Strix",
+            descripcion: "El espía Twilight recibe su misión más importante: formar una familia falsa para infiltrarse en la Academia Eden.",
+            duracion_minutos: 24,
+            fecha_emision: new Date('2022-04-09'),
+            temporada_id: temporadasCreadas[0]._id
+        },
+        {
+            numero_episodio: 2,
+            titulo: "Conseguir una esposa",
+            descripcion: "Twilight busca una esposa para completar su familia falsa y conoce a Yor Briar.",
+            duracion_minutos: 24,
+            fecha_emision: new Date('2022-04-16'),
+            temporada_id: temporadasCreadas[0]._id
+        },
+        {
+            numero_episodio: 3,
+            titulo: "Prepararse para la entrevista",
+            descripcion: "La familia Forger se prepara para la entrevista crucial en la Academia Eden.",
+            duracion_minutos: 24,
+            fecha_emision: new Date('2022-04-23'),
+            temporada_id: temporadasCreadas[0]._id
+        },
+        {
+            numero_episodio: 4,
+            titulo: "La prestigiosa escuela de entrevistas",
+            descripcion: "La familia enfrenta una serie de pruebas inesperadas durante la entrevista en la Academia Eden.",
+            duracion_minutos: 24,
+            fecha_emision: new Date('2022-04-30'),
+            temporada_id: temporadasCreadas[0]._id
+        },
+        {
+            numero_episodio: 5,
+            titulo: "El resultado de la prueba",
+            descripcion: "Los Forger esperan ansiosamente los resultados de la entrevista mientras Anya hace nuevos amigos.",
+            duracion_minutos: 24,
+            fecha_emision: new Date('2022-05-07'),
+            temporada_id: temporadasCreadas[0]._id
+        },
+        {
+            numero_episodio: 6,
+            titulo: "La operación de amistad",
+            descripcion: "Anya debe hacerse amiga de Damian Desmond para avanzar en la Operación Strix.",
+            duracion_minutos: 24,
+            fecha_emision: new Date('2022-05-14'),
+            temporada_id: temporadasCreadas[0]._id
+        },
+        {
+            numero_episodio: 7,
+            titulo: "El objetivo de la segunda hija",
+            descripcion: "Yuri Briar visita a su hermana Yor, poniendo en peligro el secreto de la familia falsa.",
+            duracion_minutos: 24,
+            fecha_emision: new Date('2022-05-21'),
+            temporada_id: temporadasCreadas[0]._id
+        },
+        {
+            numero_episodio: 8,
+            titulo: "La operación de espionaje encubierto",
+            descripcion: "Loid debe infiltrarse en un partido de tenis para acercarse a su objetivo.",
+            duracion_minutos: 24,
+            fecha_emision: new Date('2022-05-28'),
+            temporada_id: temporadasCreadas[0]._id
+        },
+        {
+            numero_episodio: 9,
+            titulo: "Muéstralo en la clase de educación física",
+            descripcion: "Anya intenta obtener una Stella Star en la clase de dodge ball para impresionar a su padre.",
+            duracion_minutos: 24,
+            fecha_emision: new Date('2022-06-04'),
+            temporada_id: temporadasCreadas[0]._id
+        },
+        {
+            numero_episodio: 10,
+            titulo: "La gran operación de citas",
+            descripcion: "Yor se preocupa por su papel como esposa y madre, llevando a una cita especial con Loid.",
+            duracion_minutos: 24,
+            fecha_emision: new Date('2022-06-11'),
+            temporada_id: temporadasCreadas[0]._id
+        },
+        {
+            numero_episodio: 11,
+            titulo: "Stella",
+            descripcion: "Anya tiene la oportunidad de ganar su primera Stella Star al rescatar a un niño que se está ahogando.",
+            duracion_minutos: 24,
+            fecha_emision: new Date('2022-06-18'),
+            temporada_id: temporadasCreadas[0]._id
+        },
+        {
+            numero_episodio: 12,
+            titulo: "Penguin Park",
+            descripcion: "La familia Forger visita un parque de pingüinos como recompensa por la Stella de Anya.",
+            duracion_minutos: 24,
+            fecha_emision: new Date('2022-06-25'),
+            temporada_id: temporadasCreadas[0]._id
+        },
+        // Temporada 2
+        {
+            numero_episodio: 1,
+            titulo: "El plan del espía secreto",
+            descripcion: "Loid debe completar una nueva misión mientras mantiene su vida familiar intacta.",
+            duracion_minutos: 24,
+            fecha_emision: new Date('2022-10-01'),
+            temporada_id: temporadasCreadas[1]._id
+        },
+        {
+            numero_episodio: 2,
+            titulo: "Las lágrimas del amor de la sicaria",
+            descripcion: "Yor enfrenta dudas sobre sus habilidades como madre mientras recuerda su pasado.",
+            duracion_minutos: 24,
+            fecha_emision: new Date('2022-10-08'),
+            temporada_id: temporadasCreadas[1]._id
+        },
+        {
+            numero_episodio: 3,
+            titulo: "Misión y familia",
+            descripcion: "Bond, un perro con poderes precognitivos, entra en la vida de los Forger.",
+            duracion_minutos: 24,
+            fecha_emision: new Date('2022-10-15'),
+            temporada_id: temporadasCreadas[1]._id
+        },
+        {
+            numero_episodio: 4,
+            titulo: "El perro de las predicciones",
+            descripcion: "Anya y Bond deben trabajar juntos para prevenir un atentado terrorista.",
+            duracion_minutos: 24,
+            fecha_emision: new Date('2022-10-22'),
+            temporada_id: temporadasCreadas[1]._id
+        },
+        {
+            numero_episodio: 5,
+            titulo: "Concentración en el fútbol y la rivalidad",
+            descripcion: "Damian intenta impresionar a su padre mientras Anya lucha en un partido de fútbol escolar.",
+            duracion_minutos: 24,
+            fecha_emision: new Date('2022-10-29'),
+            temporada_id: temporadasCreadas[1]._id
+        },
+        {
+            numero_episodio: 6,
+            titulo: "La hermana y el hermano",
+            descripcion: "Yuri visita nuevamente a Yor, aumentando la tensión en el secreto de los Forger.",
+            duracion_minutos: 24,
+            fecha_emision: new Date('2022-11-05'),
+            temporada_id: temporadasCreadas[1]._id
+        },
+        {
+            numero_episodio: 7,
+            titulo: "Un encuentro de espías",
+            descripcion: "Loid se encuentra con Fiona Frost, una compañera espía que tiene sentimientos por él.",
+            duracion_minutos: 24,
+            fecha_emision: new Date('2022-11-12'),
+            temporada_id: temporadasCreadas[1]._id
+        },
+        {
+            numero_episodio: 8,
+            titulo: "El plan para parejas",
+            descripcion: "Fiona intenta demostrar que sería una mejor esposa falsa que Yor en un torneo de tenis.",
+            duracion_minutos: 24,
+            fecha_emision: new Date('2022-11-19'),
+            temporada_id: temporadasCreadas[1]._id
+        },
+        {
+            numero_episodio: 9,
+            titulo: "El desafío de cocina de la madre",
+            descripcion: "Yor intenta mejorar sus habilidades culinarias con resultados catastróficos.",
+            duracion_minutos: 24,
+            fecha_emision: new Date('2022-11-26'),
+            temporada_id: temporadasCreadas[1]._id
+        },
+        {
+            numero_episodio: 10,
+            titulo: "El hermano mayor y la hermana menor",
+            descripcion: "Anya y Damian enfrentan una situación que podría acercarlos más.",
+            duracion_minutos: 24,
+            fecha_emision: new Date('2022-12-03'),
+            temporada_id: temporadasCreadas[1]._id
+        },
+        {
+            numero_episodio: 11,
+            titulo: "Estudio en grupo",
+            descripcion: "Los amigos de Anya la visitan para una sesión de estudio grupal en casa de los Forger.",
+            duracion_minutos: 24,
+            fecha_emision: new Date('2022-12-10'),
+            temporada_id: temporadasCreadas[1]._id
+        },
+        {
+            numero_episodio: 12,
+            titulo: "La investigación de Anya",
+            descripcion: "Anya investiga a un misterioso visitante en la escuela, creyendo que es un espía.",
+            duracion_minutos: 24,
+            fecha_emision: new Date('2022-12-17'),
+            temporada_id: temporadasCreadas[1]._id
+        },
+        {
+            numero_episodio: 13,
+            titulo: "Proyecto Apple",
+            descripcion: "Se revelan detalles del pasado de Anya y los experimentos del Proyecto Apple.",
+            duracion_minutos: 24,
+            fecha_emision: new Date('2022-12-24'),
+            temporada_id: temporadasCreadas[1]._id
+        }
+    ];
+
+    const episodiosCreados = await Episodio.insertMany(episodios);
+    console.log(`✅ ${episodiosCreados.length} episodios insertados`);
+}
+
+// Función principal de seed
+async function seedDatabase() {
+    try {
+        // Conectar a la base de datos
+        await connectDB();
+        
+        console.log('🗑️  Limpiando base de datos...');
+        
+        // Limpiar colecciones existentes
+        await Temporada.deleteMany({});
+        await Episodio.deleteMany({});
+        await Personaje.deleteMany({});
+        await Tomo.deleteMany({});
+        
+        console.log('📝 Insertando datos...\n');
+        
+        // Insertar temporadas
+        const temporadasCreadas = await Temporada.insertMany(temporadas);
+        console.log(`✅ ${temporadasCreadas.length} temporadas insertadas`);
+        
+        // Insertar episodios (necesita las temporadas primero)
+        await crearEpisodios(temporadasCreadas);
+        
+        // Insertar personajes
+        const personajesCreados = await Personaje.insertMany(personajes);
+        console.log(`✅ ${personajesCreados.length} personajes insertados`);
+        
+        // Insertar tomos
+        const tomosCreados = await Tomo.insertMany(tomos);
+        console.log(`✅ ${tomosCreados.length} tomos insertados`);
+        
+        console.log('\n🎉 ¡Base de datos poblada exitosamente!');
+        console.log('\n📊 Resumen:');
+        console.log(`   - Temporadas: ${temporadasCreadas.length}`);
+        console.log(`   - Episodios: ${await Episodio.countDocuments()}`);
+        console.log(`   - Personajes: ${personajesCreados.length}`);
+        console.log(`   - Tomos: ${tomosCreados.length}`);
+        
+        process.exit(0);
+    } catch (error) {
+        console.error('❌ Error al poblar la base de datos:', error);
+        process.exit(1);
+    }
+}
+
+// Ejecutar seed
+seedDatabase();

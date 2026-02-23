@@ -1,0 +1,12 @@
+.card-header h3 {
+  margin: 0;
+}
+
+.table th {
+  background-color: #f8f9fa;
+}
+
+.badge {
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+}

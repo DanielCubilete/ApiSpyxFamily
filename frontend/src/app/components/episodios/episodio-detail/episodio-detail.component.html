@@ -1,0 +1,103 @@
+<div class="wiki-container">
+  <div class="wiki-article" *ngIf="episodio">
+    <!-- Header estilo Wikipedia -->
+    <div class="wiki-header">
+      <h1 class="wiki-title">{{ episodio.titulo }}</h1>
+      <p class="wiki-subtitle">Episodio {{ episodio.numero_episodio }} de Spy x Family</p>
+    </div>
+
+    <!-- Infobox estilo Wikipedia -->
+    <div class="wiki-content-wrapper">
+      <aside class="wiki-infobox">
+        <div class="infobox-title">Información del episodio</div>
+        <table class="infobox-table">
+          <tr>
+            <th>Número de episodio</th>
+            <td>{{ episodio.numero_episodio }}</td>
+          </tr>
+          <tr>
+            <th>Temporada</th>
+            <td>{{ getTemporadaTitulo(episodio.temporada_id) }}</td>
+          </tr>
+          <tr>
+            <th>Fecha de emisión</th>
+            <td>{{ episodio.fecha_emision | date:'dd \'de\' MMMM \'de\' yyyy' }}</td>
+          </tr>
+          <tr>
+            <th>Duración</th>
+            <td>{{ episodio.duracion_minutos }} minutos</td>
+          </tr>
+          <tr *ngIf="episodio.director">
+            <th>Director</th>
+            <td>{{ episodio.director }}</td>
+          </tr>
+          <tr *ngIf="episodio.guionista">
+            <th>Guionista</th>
+            <td>{{ episodio.guionista }}</td>
+          </tr>
+          <tr *ngIf="episodio.valoracion">
+            <th>Valoración</th>
+            <td>
+              <span class="rating">⭐ {{ episodio.valoracion }}/10</span>
+            </td>
+          </tr>
+        </table>
+      </aside>
+
+      <!-- Contenido principal -->
+      <div class="wiki-main-content">
+        <section class="wiki-section">
+          <h2 class="wiki-section-title">Sinopsis</h2>
+          <p class="wiki-text">{{ episodio.descripcion }}</p>
+        </section>
+
+        <section class="wiki-section">
+          <h2 class="wiki-section-title">Detalles de producción</h2>
+          <p class="wiki-text">
+            Este episodio fue emitido el {{ episodio.fecha_emision | date:'dd \'de\' MMMM \'de\' yyyy' }}
+            con una duración de {{ episodio.duracion_minutos }} minutos.
+          </p>
+          <p class="wiki-text" *ngIf="episodio.director">
+            <strong>Dirección:</strong> {{ episodio.director }}
+          </p>
+          <p class="wiki-text" *ngIf="episodio.guionista">
+            <strong>Guion:</strong> {{ episodio.guionista }}
+          </p>
+        </section>
+
+        <section class="wiki-section">
+          <h2 class="wiki-section-title">Recepción</h2>
+          <p class="wiki-text" *ngIf="episodio.valoracion">
+            El episodio ha recibido una valoración promedio de <strong>{{ episodio.valoracion }}/10</strong> 
+            por parte de los espectadores.
+          </p>
+          <p class="wiki-text" *ngIf="!episodio.valoracion">
+            Este episodio aún no ha sido valorado por los espectadores.
+          </p>
+        </section>
+
+        <!-- Metadatos -->
+        <section class="wiki-metadata">
+          <p><small>
+            Última actualización: {{ episodio.updatedAt | date:'dd/MM/yyyy HH:mm' }}
+          </small></p>
+        </section>
+      </div>
+    </div>
+
+    <!-- Navegación -->
+    <div class="wiki-navigation">
+      <button class="wiki-btn wiki-btn-secondary" (click)="volver()">
+        ← Volver a la lista de episodios
+      </button>
+    </div>
+  </div>
+
+  <div class="wiki-alert" *ngIf="!episodio">
+    <strong>⚠️ Episodio no encontrado</strong>
+    <p>El episodio que buscas no existe o ha sido eliminado.</p>
+    <button class="wiki-btn wiki-btn-secondary" (click)="volver()">
+      Volver a la lista
+    </button>
+  </div>
+</div>

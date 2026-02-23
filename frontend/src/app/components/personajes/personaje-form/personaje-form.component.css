@@ -1,0 +1,11 @@
+.is-invalid {
+  border-color: #dc3545;
+}
+
+.invalid-feedback {
+  display: block;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}

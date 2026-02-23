@@ -1,0 +1,35 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/">
+      <strong>🕵️ Spy x Family</strong>
+    </a>
+    <button class="navbar-toggler" type="button" (click)="toggleNavbar()">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" [class.show]="!isCollapsed">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+            📚 Documentación API
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/home" routerLinkActive="active">
+            🏠 Estadísticas
+          </a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" (click)="toggleDropdown()">
+            📊 Entidades
+          </a>
+          <ul class="dropdown-menu" [class.show]="isDropdownOpen" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" routerLink="/personajes">👥 Personajes</a></li>
+            <li><a class="dropdown-item" routerLink="/temporadas">📺 Temporadas</a></li>
+            <li><a class="dropdown-item" routerLink="/episodios">🎬 Episodios</a></li>
+            <li><a class="dropdown-item" routerLink="/tomos">📖 Tomos</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

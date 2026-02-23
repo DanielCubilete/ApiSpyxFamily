@@ -1,0 +1,143 @@
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header bg-primary text-white">
+      <h3 class="mb-0">
+        {{ isEditMode ? '✏️ Editar Personaje' : '➕ Nuevo Personaje' }}
+      </h3>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="personajeForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <!-- Nombre -->
+          <div class="col-md-6 mb-3">
+            <label for="nombre" class="form-label">Nombre *</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="nombre"
+              formControlName="nombre"
+              [class.is-invalid]="submitted && f['nombre'].errors">
+            <div class="invalid-feedback" *ngIf="submitted && f['nombre'].errors">
+              <div *ngIf="f['nombre'].errors['required']">El nombre es requerido</div>
+              <div *ngIf="f['nombre'].errors['minlength']">Mínimo 2 caracteres</div>
+              <div *ngIf="f['nombre'].errors['maxlength']">Máximo 100 caracteres</div>
+            </div>
+          </div>
+
+          <!-- Alias -->
+          <div class="col-md-6 mb-3">
+            <label for="alias" class="form-label">Alias</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="alias"
+              formControlName="alias">
+            <small class="text-muted">Opcional</small>
+          </div>
+
+          <!-- Edad -->
+          <div class="col-md-6 mb-3">
+            <label for="edad" class="form-label">Edad</label>
+            <input 
+              type="number" 
+              class="form-control" 
+              id="edad"
+              formControlName="edad"
+              min="0"
+              max="120"
+              [class.is-invalid]="submitted && f['edad'].errors">
+            <div class="invalid-feedback" *ngIf="submitted && f['edad'].errors">
+              <div *ngIf="f['edad'].errors['min']">La edad debe ser mayor o igual a 0</div>
+              <div *ngIf="f['edad'].errors['max']">La edad debe ser menor o igual a 120</div>
+            </div>
+            <small class="text-muted">Opcional</small>
+          </div>
+
+          <!-- Rol -->
+          <div class="col-md-6 mb-3">
+            <label for="rol" class="form-label">Rol *</label>
+            <select 
+              class="form-select" 
+              id="rol"
+              formControlName="rol"
+              [class.is-invalid]="submitted && f['rol'].errors">
+              <option value="">Seleccione un rol</option>
+              <option value="principal">Principal</option>
+              <option value="secundario">Secundario</option>
+              <option value="recurrente">Recurrente</option>
+            </select>
+            <div class="invalid-feedback" *ngIf="submitted && f['rol'].errors">
+              <div *ngIf="f['rol'].errors['required']">El rol es requerido</div>
+            </div>
+          </div>
+
+          <!-- Organización -->
+          <div class="col-md-12 mb-3">
+            <label for="organizacion" class="form-label">Organización</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="organizacion"
+              formControlName="organizacion"
+              placeholder="Ej: WISE, Garden, SSS...">
+            <small class="text-muted">Opcional</small>
+          </div>
+
+          <!-- Descripción -->
+          <div class="col-md-12 mb-3">
+            <label for="descripcion" class="form-label">Descripción *</label>
+            <textarea 
+              class="form-control" 
+              id="descripcion"
+              formControlName="descripcion"
+              rows="4"
+              [class.is-invalid]="submitted && f['descripcion'].errors"></textarea>
+            <div class="invalid-feedback" *ngIf="submitted && f['descripcion'].errors">
+              <div *ngIf="f['descripcion'].errors['required']">La descripción es requerida</div>
+              <div *ngIf="f['descripcion'].errors['minlength']">Mínimo 10 caracteres</div>
+            </div>
+          </div>
+
+          <!-- Habilidades -->
+          <div class="col-md-12 mb-3">
+            <label class="form-label">Habilidades</label>
+            <div formArrayName="habilidades">
+              <div 
+                *ngFor="let habilidad of habilidades.controls; let i = index" 
+                class="input-group mb-2">
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  [formControlName]="i"
+                  placeholder="Ej: Espionaje, Combate...">
+                <button 
+                  type="button" 
+                  class="btn btn-danger" 
+                  (click)="eliminarHabilidad(i)">
+                  🗑️
+                </button>
+              </div>
+            </div>
+            <button 
+              type="button" 
+              class="btn btn-secondary btn-sm" 
+              (click)="agregarHabilidad()">
+              ➕ Agregar Habilidad
+            </button>
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="d-flex justify-content-end gap-2">
+          <button type="button" class="btn btn-secondary" (click)="cancelar()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary">
+            {{ isEditMode ? '💾 Guardar Cambios' : '✅ Crear Personaje' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

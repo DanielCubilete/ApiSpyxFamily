@@ -1,0 +1,40 @@
+.tomo-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.tomo-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.tomo-card .card-img-top {
+  border-bottom: 3px solid #0d6efd;
+  border: 2px solid #dee2e6;
+  padding: 10px;
+  background-color: #f8f9fa;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+}
+
+.tomo-sinopsis {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 60px;
+}
+
+.tomo-card .card-body {
+  padding: 1rem;
+}
+
+.tomo-card code {
+  font-size: 0.75rem;
+  background-color: #f8f9fa;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+}
+
+.tomo-card .badge {
+  font-size: 0.75rem;
+}
