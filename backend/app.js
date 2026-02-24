@@ -10,8 +10,36 @@ const episodioRoutes = require('./src/routes/episodio.routes');
 const personajeRoutes = require('./src/routes/personaje.routes');
 const tomoRoutes = require('./src/routes/tomo.routes');
 
+// Configuración CORS
+const corsOptions = {
+    origin: function (origin, callback) {
+        // Permitir peticiones sin origin (Postman, curl, etc.) y desde dominios permitidos
+        const allowedOrigins = [
+            'http://localhost:3000',
+            'http://localhost:3001',
+            'http://localhost:4200',
+            'https://api-spyx-family-odt6wb5zp-daniels-projects-83665ae7.vercel.app',
+            /^https:\/\/.*\.vercel\.app$/ // Todos los subdominios de Vercel
+        ];
+        
+        if (!origin) return callback(null, true);
+        
+        const isAllowed = allowedOrigins.some(allowed => {
+            if (allowed instanceof RegExp) return allowed.test(origin);
+            return allowed === origin;
+        });
+        
+        if (isAllowed) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true
+};
+
 // Middlewares
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
