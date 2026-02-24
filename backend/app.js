@@ -19,6 +19,7 @@ const corsOptions = {
             'http://localhost:3001',
             'http://localhost:4200',
             'https://api-spyx-family-odt6wb5zp-daniels-projects-83665ae7.vercel.app',
+            'https://api-spyx-family-app.vercel.app',
             /^https:\/\/.*\.vercel\.app$/ // Todos los subdominios de Vercel
         ];
         
