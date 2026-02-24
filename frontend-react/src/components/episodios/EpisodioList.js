@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import './EpisodioList.css';
 import episodioService from '../../services/episodioService';
 import temporadaService from '../../services/temporadaService';
 import Loading from '../Loading';
 
 const EpisodioList = () => {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [episodios, setEpisodios] = useState([]);
   const [temporadas, setTemporadas] = useState([]);
@@ -66,28 +67,6 @@ const EpisodioList = () => {
     // Si no, buscar en el array de temporadas
     const temporada = temporadas.find(t => t._id === temporadaId);
     return temporada ? `Temporada ${temporada.numero_temporada}: ${temporada.titulo}` : 'Temporada desconocida';
-  };
-
-  // Función para obtener imagen del episodio
-  const getImagenEpisodio = (episodio) => {
-    // Si el episodio tiene imagen_url, usarla
-    if (episodio.imagen_url) {
-      return episodio.imagen_url;
-    }
-    
-    // Si no tiene imagen, usar una por defecto basada en temporada y episodio
-    const numeroTemp = obtenerNumeroTemporada(episodio.temporada_id);
-    const numeroEp = episodio.numero_episodio;
-    return `https://picsum.photos/seed/spyxfamily-default-t${numeroTemp}e${numeroEp}/400/250`;
-  };
-
-  // Manejar error de carga de imagen
-  const handleImageError = (e, episodio) => {
-    const numeroTemp = obtenerNumeroTemporada(episodio.temporada_id);
-    const numeroEp = episodio.numero_episodio;
-    
-    // Fallback a otra URL de picsum con seed diferente
-    e.target.src = `https://picsum.photos/seed/fallback-spyxfamily-t${numeroTemp}e${numeroEp}/400/250`;
   };
 
   const filtrarEpisodios = () => {
@@ -177,14 +156,11 @@ const EpisodioList = () => {
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
           {episodiosFiltrados.map((episodio) => (
             <div key={episodio._id} className="col">
-              <div className="card h-100 episodio-card">
-                <img
-                  src={getImagenEpisodio(episodio)}
-                  className="card-img-top"
-                  alt={episodio.titulo}
-                  style={{ height: '200px', objectFit: 'cover' }}
-                  onError={(e) => handleImageError(e, episodio)}
-                />
+              <div 
+                className="card h-100 episodio-card"
+                onClick={() => navigate(`/episodios/${episodio._id}`)}
+                style={{ cursor: 'pointer' }}
+              >
                 <div className="card-body">
                   <div className="d-flex justify-content-between align-items-start mb-2">
                     <span className="badge bg-secondary">

@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { PersonajeService } from '../../../services/personaje.service';
+import { ActivatedRoute, Router } from '@angular/router';import { finalize } from 'rxjs/operators';import { PersonajeService } from '../../../services/personaje.service';
 import { SharedService } from '../../../services/shared.service';
 import { Personaje } from '../../../models/interfaces';
 
@@ -119,39 +118,39 @@ export class PersonajeFormComponent implements OnInit {
     this.sharedService.showLoading();
 
     if (this.isEditMode && this.personajeId) {
-      this.personajeService.update(this.personajeId, personajeData).subscribe({
-        next: (response) => {
-          this.sharedService.hideLoading();
-          if (response.success) {
-            this.sharedService.showSuccess('Personaje actualizado correctamente');
-            this.router.navigate(['/personajes', this.personajeId]);
+      this.personajeService.update(this.personajeId, personajeData)
+        .pipe(finalize(() => this.sharedService.hideLoading()))
+        .subscribe({
+          next: (response) => {
+            if (response.success) {
+              this.sharedService.showSuccess('Personaje actualizado correctamente');
+              this.router.navigate(['/personajes']);
+            }
+          },
+          error: (error) => {
+            this.sharedService.showError(
+              error.error?.message || 'Error al actualizar el personaje'
+            );
+            console.error(error);
           }
-        },
-        error: (error) => {
-          this.sharedService.hideLoading();
-          this.sharedService.showError(
-            error.error?.message || 'Error al actualizar el personaje'
-          );
-          console.error(error);
-        }
-      });
+        });
     } else {
-      this.personajeService.create(personajeData).subscribe({
-        next: (response) => {
-          this.sharedService.hideLoading();
-          if (response.success) {
-            this.sharedService.showSuccess('Personaje creado correctamente');
-            this.router.navigate(['/personajes']);
+      this.personajeService.create(personajeData)
+        .pipe(finalize(() => this.sharedService.hideLoading()))
+        .subscribe({
+          next: (response) => {
+            if (response.success) {
+              this.sharedService.showSuccess('Personaje creado correctamente');
+              this.router.navigate(['/personajes']);
+            }
+          },
+          error: (error) => {
+            this.sharedService.showError(
+              error.error?.message || 'Error al crear el personaje'
+            );
+            console.error(error);
           }
-        },
-        error: (error) => {
-          this.sharedService.hideLoading();
-          this.sharedService.showError(
-            error.error?.message || 'Error al crear el personaje'
-          );
-          console.error(error);
-        }
-      });
+        });
     }
   }
 

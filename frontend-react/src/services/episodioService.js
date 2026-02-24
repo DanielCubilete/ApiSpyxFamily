@@ -7,19 +7,30 @@ class EpisodioService extends ApiService {
 
   async getByTemporada(temporadaId) {
     const response = await fetch(`${this.baseUrl}/temporada/${temporadaId}`);
-    return this.handleResponse(response);
+    
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({
+        message: 'Error en la petición'
+      }));
+      throw new Error(error.message || 'Error en la petición');
+    }
+    
+    const json = await response.json();
+    return json.data !== undefined ? json.data : json;
   }
 
   async search(query) {
     const response = await fetch(`${this.baseUrl}/search?query=${encodeURIComponent(query)}`);
-    return this.handleResponse(response);
-  }
-
-  handleResponse(response) {
+    
     if (!response.ok) {
-      throw new Error('Error en la petición');
+      const error = await response.json().catch(() => ({
+        message: 'Error en la petición'
+      }));
+      throw new Error(error.message || 'Error en la petición');
     }
-    return response.json();
+    
+    const json = await response.json();
+    return json.data !== undefined ? json.data : json;
   }
 }
 

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { finalize } from 'rxjs/operators';
 import { TemporadaService } from '../../../services/temporada.service';
 import { SharedService } from '../../../services/shared.service';
 import { Temporada } from '../../../models/interfaces';
@@ -15,12 +16,15 @@ import { Temporada } from '../../../models/interfaces';
 export class TemporadaDetailComponent implements OnInit {
   temporada: Temporada | null = null;
   temporadaId: string = '';
+  isLoading: boolean = true;
+  loadError: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private temporadaService: TemporadaService,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -32,24 +36,43 @@ export class TemporadaDetailComponent implements OnInit {
 
   cargarTemporada() {
     console.log('🔍 Cargando temporada ID:', this.temporadaId);
+    this.isLoading = true;
+    this.loadError = false;
     this.sharedService.showLoading();
-    this.temporadaService.getById(this.temporadaId).subscribe({
-      next: (response) => {
-        console.log('✅ Temporada recibida:', response);
-        this.sharedService.hideLoading();
-        if (response.success && response.data) {
-          this.temporada = response.data;
-          console.log('📊 Temporada cargada:', this.temporada);
-          console.log('🎬 Episodios incluidos:', this.temporada.episodios?.length || 0);
+    
+    this.temporadaService.getById(this.temporadaId)
+      .pipe(
+        finalize(() => {
+          this.sharedService.hideLoading();
+          this.isLoading = false;
+        })
+      )
+      .subscribe({
+        next: (response) => {
+          console.log('✅ Respuesta de temporada recibida:', response);
+          if (response.success && response.data) {
+            this.temporada = response.data;
+            console.log('📊 Temporada cargada exitosamente:', {
+              id: this.temporada._id,
+              titulo: this.temporada.titulo,
+              numero: this.temporada.numero_temporada
+            });
+            console.log('🎬 Episodios incluidos:', this.temporada.episodios?.length || 0);
+            setTimeout(() => this.cdr.detectChanges(), 0);
+          } else {
+            console.error('❌ Respuesta sin success o sin data:', response);
+            this.loadError = true;
+            this.sharedService.showError('No se encontró la temporada');
+          }
+        },
+        error: (error) => {
+          console.error('❌ Error HTTP al cargar temporada:', error);
+          console.error('Status:', error.status);
+          console.error('Message:', error.message);
+          this.loadError = true;
+          this.sharedService.showError('Error al cargar la temporada');
         }
-      },
-      error: (error) => {
-        console.error('❌ Error al cargar temporada:', error);
-        this.sharedService.hideLoading();
-        this.sharedService.showError('Error al cargar la temporada');
-        console.error(error);
-      }
-    });
+      });
   }
 
   eliminar() {

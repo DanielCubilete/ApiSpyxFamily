@@ -12,3 +12,125 @@ table th {
   font-weight: 600;
   color: #6c757d;
 }
+
+/* Estilos para el contenedor wiki */
+.wiki-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.wiki-article {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+/* Estilos para la navegación */
+.wiki-navigation {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid #e9ecef;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-start;
+}
+
+/* Botones estilo wiki */
+.wiki-btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: none;
+  letter-spacing: 0.3px;
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.wiki-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.wiki-btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.wiki-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.wiki-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Botón secundario (Volver) */
+.wiki-btn-secondary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: transparent;
+}
+
+.wiki-btn-secondary:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  box-shadow: 0 5px 20px rgba(102, 126, 234, 0.5);
+}
+
+/* Alerta estilo wiki */
+.wiki-alert {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+}
+
+.wiki-alert strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #856404;
+}
+
+.wiki-alert p {
+  color: #856404;
+  margin-bottom: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .wiki-container {
+    padding: 1rem;
+  }
+  
+  .wiki-article {
+    padding: 1rem;
+  }
+  
+  .wiki-navigation {
+    flex-direction: column;
+  }
+  
+  .wiki-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './TomoList.css';
 import tomoService from '../../services/tomoService';
 import Loading from '../Loading';
 
 const TomoList = () => {
+  const navigate = useNavigate();
   const [tomos, setTomos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -123,7 +125,11 @@ const TomoList = () => {
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-5 g-4 mb-4">
           {tomosFiltrados.map((tomo) => (
             <div key={tomo._id} className="col">
-              <div className="card h-100 tomo-card">
+              <div 
+                className="card h-100 tomo-card" 
+                onClick={() => navigate(`/tomos/${tomo._id}`)}
+                style={{ cursor: 'pointer' }}
+              >
                 <img
                   src={getImagenTomo(tomo)}
                   className="card-img-top"

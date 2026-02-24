@@ -1,0 +1,139 @@
+.personaje-detail-image-container {
+  position: relative;
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  border: 1px solid #dee2e6;
+}
+
+.personaje-detail-image {
+  max-height: 600px;
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  object-fit: contain;
+}
+
+.personaje-rol-badge {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  transform: rotate(10deg);
+}
+
+.personaje-rol-badge .badge {
+  font-size: 0.9rem;
+  padding: 8px 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.personaje-header {
+  border-bottom: 3px solid #0d6efd;
+  padding-bottom: 1rem;
+}
+
+.personaje-nombre {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #212529;
+  margin-bottom: 0.5rem;
+}
+
+.personaje-alias {
+  font-size: 1.2rem;
+  margin: 0.5rem 0 0 0;
+}
+
+.personaje-alias .badge {
+  font-size: 1rem;
+  padding: 6px 12px;
+}
+
+.personaje-info-section {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 10px;
+  border-left: 4px solid #0d6efd;
+}
+
+.personaje-info-section h5 {
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #6c757d;
+}
+
+.info-value {
+  color: #212529;
+  font-weight: 500;
+}
+
+.personaje-descripcion {
+  line-height: 1.8;
+  color: #495057;
+  text-align: justify;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 8px;
+  margin: 0;
+  border: 1px solid #dee2e6;
+}
+
+.habilidades-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+.habilidad-badge {
+  font-size: 0.95rem;
+  padding: 8px 16px;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(25, 135, 84, 0.2);
+}
+
+@media (max-width: 768px) {
+  .personaje-detail-image-container {
+    margin-bottom: 2rem;
+  }
+
+  .personaje-rol-badge {
+    top: 20px;
+    right: 20px;
+  }
+
+  .personaje-nombre {
+    font-size: 2rem;
+  }
+
+  .info-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}

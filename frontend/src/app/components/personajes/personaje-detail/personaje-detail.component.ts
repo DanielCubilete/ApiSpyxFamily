@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { finalize } from 'rxjs/operators';
 import { PersonajeService } from '../../../services/personaje.service';
 import { SharedService } from '../../../services/shared.service';
 import { Personaje } from '../../../models/interfaces';
@@ -19,7 +20,8 @@ export class PersonajeDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private personajeService: PersonajeService,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -31,20 +33,21 @@ export class PersonajeDetailComponent implements OnInit {
 
   cargarPersonaje(id: string) {
     this.sharedService.showLoading();
-    this.personajeService.getById(id).subscribe({
-      next: (response) => {
-        this.sharedService.hideLoading();
-        if (response.success && response.data) {
-          this.personaje = response.data;
+    this.personajeService.getById(id)
+      .pipe(finalize(() => this.sharedService.hideLoading()))
+      .subscribe({
+        next: (response) => {
+          if (response.success && response.data) {
+            this.personaje = response.data;
+            setTimeout(() => this.cdr.detectChanges(), 0);
+          }
+        },
+        error: (error) => {
+          this.sharedService.showError('Error al cargar el personaje');
+          console.error(error);
+          this.router.navigate(['/personajes']);
         }
-      },
-      error: (error) => {
-        this.sharedService.hideLoading();
-        this.sharedService.showError('Error al cargar el personaje');
-        console.error(error);
-        this.router.navigate(['/personajes']);
-      }
-    });
+      });
   }
 
   editar() {
@@ -58,20 +61,20 @@ export class PersonajeDetailComponent implements OnInit {
 
     if (confirm(`¿Estás seguro de eliminar a ${this.personaje.nombre}?`)) {
       this.sharedService.showLoading();
-      this.personajeService.delete(this.personaje._id).subscribe({
-        next: (response) => {
-          this.sharedService.hideLoading();
-          if (response.success) {
-            this.sharedService.showSuccess('Personaje eliminado correctamente');
-            this.router.navigate(['/personajes']);
+      this.personajeService.delete(this.personaje._id)
+        .pipe(finalize(() => this.sharedService.hideLoading()))
+        .subscribe({
+          next: (response) => {
+            if (response.success) {
+              this.sharedService.showSuccess('Personaje eliminado correctamente');
+              this.router.navigate(['/personajes']);
+            }
+          },
+          error: (error) => {
+            this.sharedService.showError('Error al eliminar el personaje');
+            console.error(error);
           }
-        },
-        error: (error) => {
-          this.sharedService.hideLoading();
-          this.sharedService.showError('Error al eliminar el personaje');
-          console.error(error);
-        }
-      });
+        });
     }
   }
 

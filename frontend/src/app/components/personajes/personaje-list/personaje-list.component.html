@@ -44,13 +44,6 @@
   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4 mb-4">
     <div class="col" *ngFor="let personaje of personajesPaginados">
       <div class="card h-100">
-        <img 
-          [src]="getImagenPersonaje(personaje)" 
-          class="card-img-top" 
-          [alt]="personaje.nombre"
-          style="height: 300px; object-fit: cover; cursor: pointer;"
-          (error)="onImageError($event)"
-          (click)="verDetalle(personaje._id!)">
         <div class="card-body">
           <h5 class="card-title">{{ personaje.nombre }}</h5>
           <p class="text-muted small" *ngIf="personaje.alias"><em>{{ personaje.alias }}</em></p>
@@ -69,26 +62,31 @@
             {{ personaje.descripcion }}
           </p>
         </div>
-        <div class="card-footer bg-transparent">
-          <div class="d-flex justify-content-between">
+        <div class="card-footer bg-transparent border-0 pt-0">
+          <div class="d-grid gap-2">
             <button 
-              class="btn btn-sm btn-info" 
-              (click)="verDetalle(personaje._id!)"
-              title="Ver detalle">
-              <i class="bi bi-eye"></i>
+              class="btn btn-outline-primary btn-action" 
+              (click)="verDetalle(personaje._id || '')"
+              [disabled]="!personaje._id">
+              <i class="bi bi-eye-fill me-2"></i>
+              Ver Detalle
             </button>
-            <button 
-              class="btn btn-sm btn-warning" 
-              (click)="editar(personaje._id!)"
-              title="Editar">
-              <i class="bi bi-pencil"></i>
-            </button>
-            <button 
-              class="btn btn-sm btn-danger" 
-              (click)="eliminar(personaje)"
-              title="Eliminar">
-              <i class="bi bi-trash"></i>
-            </button>
+            <div class="d-flex gap-2">
+              <button 
+                class="btn btn-outline-warning btn-action flex-fill" 
+                (click)="editar(personaje._id || '')"
+                [disabled]="!personaje._id">
+                <i class="bi bi-pencil-fill me-1"></i>
+                Editar
+              </button>
+              <button 
+                class="btn btn-outline-danger btn-action flex-fill" 
+                (click)="eliminar(personaje)"
+                [disabled]="!personaje._id">
+                <i class="bi bi-trash-fill me-1"></i>
+                Eliminar
+              </button>
+            </div>
           </div>
         </div>
       </div>

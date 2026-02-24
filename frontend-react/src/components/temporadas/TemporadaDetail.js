@@ -37,89 +37,87 @@ const TemporadaDetail = () => {
     }
   };
 
-  const handleDelete = async () => {
-    if (window.confirm('¿Estás seguro de eliminar esta temporada?')) {
-      try {
-        await temporadaService.delete(id);
-        alert('Temporada eliminada correctamente');
-        navigate('/temporadas');
-      } catch (err) {
-        alert('Error al eliminar temporada: ' + err.message);
-      }
-    }
-  };
-
   if (loading) return <Loading />;
   if (error) return <div className="alert alert-danger">{error}</div>;
   if (!temporada) return <div className="alert alert-warning">Temporada no encontrada</div>;
 
+  const getImagenTemporada = () => {
+    if (temporada.imagen_url) {
+      return temporada.imagen_url;
+    }
+    return `https://picsum.photos/seed/spyxfamily-temporada${temporada.numero_temporada}/400/600`;
+  };
+
   return (
     <div className="container mt-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2>Detalle de Temporada</h2>
+        <h2>📺 Detalle de Temporada</h2>
         <div>
-          <Link to="/temporadas" className="btn btn-secondary me-2">
-            Volver
+          <Link to="/temporadas" className="btn btn-secondary">
+            ← Volver a la lista
           </Link>
-          <Link
-            to={`/temporadas/editar/${temporada._id}`}
-            className="btn btn-warning me-2"
-          >
-            Editar
-          </Link>
-          <button className="btn btn-danger" onClick={handleDelete}>
-            Eliminar
-          </button>
         </div>
       </div>
 
-      <div className="card mb-4">
-        <div className="card-body">
-          <h3>{temporada.titulo}</h3>
-          <hr />
-          <div className="row">
-            <div className="col-md-6">
+      <div className="row mb-4">
+        <div className="col-md-4">
+          <img
+            src={getImagenTemporada()}
+            alt={temporada.titulo}
+            className="img-fluid rounded shadow"
+            style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+          />
+        </div>
+        <div className="col-md-8">
+          <div className="card h-100">
+            <div className="card-body">
+              <h3 className="mb-3">{temporada.titulo}</h3>
+              <div className="row">
+                <div className="col-md-6">
+                  <p>
+                    <strong>Número de Temporada:</strong> {temporada.numero_temporada}
+                  </p>
+                  <p>
+                    <strong>Fecha de Estreno:</strong>{' '}
+                    {new Date(temporada.fecha_estreno).toLocaleDateString('es-ES')}
+                  </p>
+                  <p>
+                    <strong>Fecha de Finalización:</strong>{' '}
+                    {temporada.fecha_finalizacion
+                      ? new Date(temporada.fecha_finalizacion).toLocaleDateString('es-ES')
+                      : 'En emisión'}
+                  </p>
+                </div>
+                <div className="col-md-6">
+                  <p>
+                    <strong>Número de Episodios:</strong> {temporada.numero_episodios}
+                  </p>
+                  <p>
+                    <strong>Estudio de Animación:</strong> {temporada.estudio_animacion}
+                  </p>
+                  <p>
+                    <strong>Estado:</strong>{' '}
+                    <span
+                      className={`badge ${
+                        temporada.estado === 'emitida'
+                          ? 'bg-success'
+                          : temporada.estado === 'en emisión'
+                          ? 'bg-primary'
+                          : 'bg-warning'
+                      }`}
+                    >
+                      {temporada.estado}
+                    </span>
+                  </p>
+                </div>
+              </div>
+              <hr />
               <p>
-                <strong>Número de Temporada:</strong> {temporada.numero_temporada}
+                <strong>Descripción:</strong>
               </p>
-              <p>
-                <strong>Fecha de Estreno:</strong>{' '}
-                {new Date(temporada.fecha_estreno).toLocaleDateString('es-ES')}
-              </p>
-              <p>
-                <strong>Fecha de Finalización:</strong>{' '}
-                {temporada.fecha_finalizacion
-                  ? new Date(temporada.fecha_finalizacion).toLocaleDateString('es-ES')
-                  : 'En emisión'}
-              </p>
-            </div>
-            <div className="col-md-6">
-              <p>
-                <strong>Número de Episodios:</strong> {temporada.numero_episodios}
-              </p>
-              <p>
-                <strong>Estudio de Animación:</strong> {temporada.estudio_animacion}
-              </p>
-              <p>
-                <strong>Estado:</strong>{' '}
-                <span
-                  className={`badge ${
-                    temporada.estado === 'emitida'
-                      ? 'bg-success'
-                      : temporada.estado === 'en emisión'
-                      ? 'bg-primary'
-                      : 'bg-warning'
-                  }`}
-                >
-                  {temporada.estado}
-                </span>
-              </p>
+              <p>{temporada.descripcion}</p>
             </div>
           </div>
-          <p>
-            <strong>Descripción:</strong>
-          </p>
-          <p>{temporada.descripcion}</p>
         </div>
       </div>
 

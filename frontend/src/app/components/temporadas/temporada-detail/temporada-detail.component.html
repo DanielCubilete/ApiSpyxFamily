@@ -74,11 +74,8 @@
           </div>
 
           <div class="d-flex gap-2 mt-4">
-            <button class="btn btn-secondary" (click)="volver()">
-              ← Volver
-            </button>
-            <button class="btn btn-danger" (click)="eliminar()">
-              🗑️ Eliminar
+            <button class="wiki-btn wiki-btn-secondary" (click)="volver()">
+              ← Volver a la lista de temporadas
             </button>
           </div>
         </div>
@@ -134,7 +131,7 @@
     </div>
   </div>
 
-  <div class="alert alert-warning mt-4" *ngIf="!temporada">
+  <div class="alert alert-warning mt-4" *ngIf="!isLoading && loadError">
     <strong>⚠️ Temporada no encontrada</strong>
   </div>
 </div>

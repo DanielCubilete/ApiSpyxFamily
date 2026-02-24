@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { finalize } from 'rxjs/operators';
 import { PersonajeService } from '../../../services/personaje.service';
 import { SharedService } from '../../../services/shared.service';
 import { Personaje } from '../../../models/interfaces';
@@ -30,7 +31,8 @@ export class PersonajeListComponent implements OnInit {
   constructor(
     private personajeService: PersonajeService,
     private sharedService: SharedService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -49,25 +51,29 @@ export class PersonajeListComponent implements OnInit {
   cargarPersonajes() {
     console.log('🔍 Cargando personajes...');
     this.sharedService.showLoading();
-    this.personajeService.getAll().subscribe({
-      next: (response) => {
-        console.log('✅ Respuesta recibida:', response);
-        this.sharedService.hideLoading();
-        if (response.success && response.data) {
-          this.personajes = response.data;
-          console.log('📊 Total personajes:', this.personajes.length);
-          this.aplicarFiltros();
-        } else {
-          console.error('❌ Respuesta sin éxito o sin datos');
+    
+    this.personajeService.getAll()
+      .pipe(
+        finalize(() => this.sharedService.hideLoading())
+      )
+      .subscribe({
+        next: (response) => {
+          console.log('✅ Respuesta recibida:', response);
+          if (response.success && response.data) {
+            this.personajes = response.data;
+            console.log('📊 Total personajes:', this.personajes.length);
+            this.aplicarFiltros();
+            setTimeout(() => this.cdr.detectChanges(), 0);
+          } else {
+            console.error('❌ Respuesta sin éxito o sin datos');
+          }
+        },
+        error: (error) => {
+          console.error('❌ Error al cargar personajes:', error);
+          this.sharedService.showError('Error al cargar personajes');
+          console.error(error);
         }
-      },
-      error: (error) => {
-        console.error('❌ Error al cargar personajes:', error);
-        this.sharedService.hideLoading();
-        this.sharedService.showError('Error al cargar personajes');
-        console.error(error);
-      }
-    });
+      });
   }
 
   aplicarFiltros() {
@@ -110,11 +116,23 @@ export class PersonajeListComponent implements OnInit {
   }
 
   verDetalle(id: string) {
+    if (!id) {
+      console.error('❌ ID de personaje no válido:', id);
+      this.sharedService.showError('Error: ID de personaje no válido');
+      return;
+    }
+    console.log('🔍 Navegando a detalle de personaje:', id);
     this.router.navigate(['/personajes', id]);
   }
 
   editar(id: string) {
-    this.router.navigate(['/personajes', 'editar', id]);
+    if (!id) {
+      console.error('❌ ID de personaje no válido:', id);
+      this.sharedService.showError('Error: ID de personaje no válido');
+      return;
+    }
+    console.log('✏️ Navegando a editar personaje:', id);
+    this.router.navigate(['/personajes/editar', id]);
   }
 
   eliminar(personaje: Personaje) {
@@ -156,17 +174,5 @@ export class PersonajeListComponent implements OnInit {
     this.searchTerm = '';
     this.rolFiltro = '';
     this.aplicarFiltros();
-  }
-
-  getImagenPersonaje(personaje: Personaje): string {
-    if (personaje.imagen_url) {
-      return personaje.imagen_url;
-    }
-    const nombreSlug = personaje.nombre.toLowerCase().replace(/\s+/g, '-');
-    return `https://picsum.photos/seed/spyxfamily-${nombreSlug}/400/500`;
-  }
-
-  onImageError(event: any): void {
-    event.target.src = 'https://via.placeholder.com/400x500/6c757d/ffffff?text=Personaje';
   }
 }

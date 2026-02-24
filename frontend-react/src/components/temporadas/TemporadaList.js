@@ -38,18 +38,6 @@ const TemporadaList = () => {
     }
   };
 
-  const handleDelete = async (id, titulo) => {
-    if (window.confirm(`¿Estás seguro de eliminar "${titulo}"?`)) {
-      try {
-        await temporadaService.delete(id);
-        alert('Temporada eliminada correctamente');
-        cargarTemporadas();
-      } catch (err) {
-        alert('Error al eliminar temporada: ' + err.message);
-      }
-    }
-  };
-
   const handleEstadoBadgeClass = (estado) => {
     switch (estado) {
       case 'emitida':
@@ -78,9 +66,6 @@ const TemporadaList = () => {
     <div className="container mt-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2>📺 Temporadas</h2>
-        <Link to="/temporadas/nueva" className="btn btn-primary">
-          <i className="bi bi-plus-lg"></i> Nueva Temporada
-        </Link>
       </div>
 
       {error && (
@@ -133,7 +118,11 @@ const TemporadaList = () => {
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
           {temporadasFiltradas.map((temporada) => (
             <div key={temporada._id} className="col">
-              <div className="card h-100 temporada-card">
+              <div 
+                className="card h-100 temporada-card" 
+                onClick={() => navigate(`/temporadas/${temporada._id}`)}
+                style={{ cursor: 'pointer' }}
+              >
                 <img
                   src={getImagenTemporada(temporada)}
                   className="card-img-top"
@@ -173,35 +162,23 @@ const TemporadaList = () => {
                   </div>
                 </div>
                 <div className="card-footer bg-white border-top-0">
-                  <div className="d-flex gap-2 mb-2">
+                  <div className="d-flex gap-2">
                     <button
-                      className="btn btn-sm btn-primary w-100"
-                      onClick={() => navigate(`/episodios?temporada=${temporada._id}`)}
+                      className="btn btn-sm btn-primary flex-fill"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/episodios?temporada=${temporada._id}`);
+                      }}
                     >
                       <i className="bi bi-collection-play"></i> Ver Episodios
                     </button>
-                  </div>
-                  <div className="d-flex gap-2">
                     <Link
                       to={`/temporadas/${temporada._id}`}
                       className="btn btn-sm btn-info flex-fill"
+                      onClick={(e) => e.stopPropagation()}
                     >
-                      <i className="bi bi-eye"></i> Ver
+                      <i className="bi bi-eye"></i> Ver Detalle
                     </Link>
-                    <Link
-                      to={`/temporadas/editar/${temporada._id}`}
-                      className="btn btn-sm btn-warning flex-fill"
-                    >
-                      <i className="bi bi-pencil"></i> Editar
-                    </Link>
-                    <button
-                      className="btn btn-sm btn-danger flex-fill"
-                      onClick={() =>
-                        handleDelete(temporada._id, temporada.titulo)
-                      }
-                    >
-                      <i className="bi bi-trash"></i> Eliminar
-                    </button>
                   </div>
                 </div>
               </div>

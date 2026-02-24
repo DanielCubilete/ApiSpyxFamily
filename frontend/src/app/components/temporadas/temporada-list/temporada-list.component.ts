@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { finalize } from 'rxjs/operators';
 import { TemporadaService } from '../../../services/temporada.service';
 import { SharedService } from '../../../services/shared.service';
 import { Temporada } from '../../../models/interfaces';
@@ -27,7 +28,8 @@ export class TemporadaListComponent implements OnInit {
   constructor(
     private temporadaService: TemporadaService,
     private sharedService: SharedService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -40,25 +42,36 @@ export class TemporadaListComponent implements OnInit {
   cargarTemporadas() {
     console.log('🔍 Cargando temporadas...');
     this.sharedService.showLoading();
-    this.temporadaService.getAll().subscribe({
-      next: (response) => {
-        console.log('✅ Respuesta recibida:', response);
-        this.sharedService.hideLoading();
-        if (response.success && response.data) {
-          this.temporadas = response.data;
-          console.log('📊 Total temporadas:', this.temporadas.length);
-          this.aplicarFiltros();
-        } else {
-          console.error('❌ Respuesta sin éxito o sin datos');
+    
+    this.temporadaService.getAll()
+      .pipe(
+        finalize(() => this.sharedService.hideLoading())
+      )
+      .subscribe({
+        next: (response) => {
+          console.log('✅ Respuesta recibida:', response);
+          if (response.success && response.data) {
+            this.temporadas = response.data;
+            console.log('📊 Total temporadas:', this.temporadas.length);
+            // Verificar que todas las temporadas tengan _id
+            const temporadasSinId = this.temporadas.filter(t => !t._id);
+            if (temporadasSinId.length > 0) {
+              console.error('⚠️ Temporadas sin _id:', temporadasSinId);
+            } else {
+              console.log('✅ Todas las temporadas tienen _id');
+            }
+            this.aplicarFiltros();
+            setTimeout(() => this.cdr.detectChanges(), 0);
+          } else {
+            console.error('❌ Respuesta sin éxito o sin datos');
+          }
+        },
+        error: (error) => {
+          console.error('❌ Error al cargar temporadas:', error);
+          this.sharedService.showError('Error al cargar temporadas');
+          console.error(error);
         }
-      },
-      error: (error) => {
-        console.error('❌ Error al cargar temporadas:', error);
-        this.sharedService.hideLoading();
-        this.sharedService.showError('Error al cargar temporadas');
-        console.error(error);
-      }
-    });
+      });
   }
 
   aplicarFiltros() {
@@ -98,13 +111,35 @@ export class TemporadaListComponent implements OnInit {
   }
 
   verDetalle(id: string) {
+    if (!id) {
+      console.error('❌ ID de temporada no válido:', id);
+      this.sharedService.showError('Error: ID de temporada no válido');
+      return;
+    }
+    console.log('🔍 Navegando a detalle de temporada:', id);
     this.router.navigate(['/temporadas', id]);
   }
 
   verEpisodios(temporadaId: string) {
+    if (!temporadaId) {
+      console.error('❌ ID de temporada no válido:', temporadaId);
+      this.sharedService.showError('Error: ID de temporada no válido');
+      return;
+    }
+    console.log('📺 Navegando a episodios de temporada:', temporadaId);
     this.router.navigate(['/episodios'], {
       queryParams: { temporada: temporadaId }
     });
+  }
+
+  editar(id: string) {
+    if (!id) {
+      console.error('❌ ID de temporada no válido:', id);
+      this.sharedService.showError('Error: ID de temporada no válido');
+      return;
+    }
+    console.log('✏️ Navegando a editar temporada:', id);
+    this.router.navigate(['/temporadas/editar', id]);
   }
 
   eliminar(temporada: Temporada) {
@@ -112,21 +147,24 @@ export class TemporadaListComponent implements OnInit {
 
     if (confirm(`¿Estás seguro de eliminar la ${temporada.titulo}?`)) {
       this.sharedService.showLoading();
-      this.temporadaService.delete(temporada._id).subscribe({
-        next: (response) => {
-          this.sharedService.hideLoading();
-          if (response.success) {
-            this.sharedService.showSuccess('Temporada eliminada correctamente');
-            this.cargarTemporadas();
+      
+      this.temporadaService.delete(temporada._id)
+        .pipe(
+          finalize(() => this.sharedService.hideLoading())
+        )
+        .subscribe({
+          next: (response) => {
+            if (response.success) {
+              this.sharedService.showSuccess('Temporada eliminada correctamente');
+              this.cargarTemporadas();
+            }
+          },
+          error: (error) => {
+            const mensaje = error.error?.message || 'Error al eliminar temporada';
+            this.sharedService.showError(mensaje);
+            console.error(error);
           }
-        },
-        error: (error) => {
-          this.sharedService.hideLoading();
-          const mensaje = error.error?.message || 'Error al eliminar temporada';
-          this.sharedService.showError(mensaje);
-          console.error(error);
-        }
-      });
+        });
     }
   }
 

@@ -14,12 +14,16 @@ import TemporadaForm from './components/temporadas/TemporadaForm';
 
 // Componentes de Personajes
 import PersonajeList from './components/personajes/PersonajeList';
+import PersonajeDetail from './components/personajes/PersonajeDetail';
+import PersonajeForm from './components/personajes/PersonajeForm';
 
 // Componentes de Episodios
 import EpisodioList from './components/episodios/EpisodioList';
+import EpisodioDetail from './components/episodios/EpisodioDetail';
 
 // Componentes de Tomos
 import TomoList from './components/tomos/TomoList';
+import TomoDetail from './components/tomos/TomoDetail';
 
 function App() {
   return (
@@ -32,17 +36,22 @@ function App() {
           {/* Rutas de Temporadas */}
           <Route path="/temporadas" element={<TemporadaList />} />
           <Route path="/temporadas/nueva" element={<TemporadaForm />} />
-          <Route path="/temporadas/:id" element={<TemporadaDetail />} />
           <Route path="/temporadas/editar/:id" element={<TemporadaForm />} />
+          <Route path="/temporadas/:id" element={<TemporadaDetail />} />
           
           {/* Rutas de Personajes */}
           <Route path="/personajes" element={<PersonajeList />} />
+          <Route path="/personajes/nuevo" element={<PersonajeForm />} />
+          <Route path="/personajes/editar/:id" element={<PersonajeForm />} />
+          <Route path="/personajes/:id" element={<PersonajeDetail />} />
           
           {/* Rutas de Episodios */}
           <Route path="/episodios" element={<EpisodioList />} />
+          <Route path="/episodios/:id" element={<EpisodioDetail />} />
           
           {/* Rutas de Tomos */}
           <Route path="/tomos" element={<TomoList />} />
+          <Route path="/tomos/:id" element={<TomoDetail />} />
         </Routes>
       </div>
     </Router>

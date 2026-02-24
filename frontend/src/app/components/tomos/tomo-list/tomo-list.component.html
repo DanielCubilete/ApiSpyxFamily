@@ -29,13 +29,15 @@
   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-5 g-4 mb-4">
     <div class="col" *ngFor="let tomo of tomosPaginados">
       <div class="card h-100">
-        <img 
-          [src]="getImagenTomo(tomo)" 
-          class="card-img-top" 
-          [alt]="tomo.titulo"
-          style="height: 350px; object-fit: contain; cursor: pointer;"
-          (error)="onImageError($event)"
-          (click)="verDetalle(tomo._id!)">
+        <div class="image-frame">
+          <img 
+            [src]="getImagenTomo(tomo)" 
+            class="card-img-top" 
+            [alt]="tomo.titulo"
+            style="height: 350px; object-fit: contain; cursor: pointer;"
+            (error)="onImageError($event)"
+            (click)="verDetalle(tomo._id!)">
+        </div>
         <div class="card-body">
           <span class="badge bg-primary mb-2">Vol. {{ tomo.numero_tomo }}</span>
           <h6 class="card-title">{{ tomo.titulo }}</h6>

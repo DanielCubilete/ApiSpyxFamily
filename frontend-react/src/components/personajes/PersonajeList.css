@@ -1,0 +1,20 @@
+/* Estilos para encuadrar imágenes */
+.image-frame {
+  padding: 12px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.image-frame img {
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  height: 300px;
+  object-fit: contain;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}

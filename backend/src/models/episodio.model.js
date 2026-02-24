@@ -19,6 +19,31 @@ const episodioSchema = new mongoose.Schema({
         trim: true,
         minlength: [10, 'La descripción debe tener al menos 10 caracteres']
     },
+    sinopsis: {
+        type: String,
+        required: false,
+        trim: true,
+        default: ''
+    },
+    director: {
+        type: String,
+        required: false,
+        trim: true,
+        default: ''
+    },
+    guionista: {
+        type: String,
+        required: false,
+        trim: true,
+        default: ''
+    },
+    valoracion: {
+        type: Number,
+        required: false,
+        min: [0, 'La valoración debe ser mayor o igual a 0'],
+        max: [10, 'La valoración no puede exceder 10'],
+        default: null
+    },
     duracion_minutos: {
         type: Number,
         required: [true, 'La duración es requerida'],

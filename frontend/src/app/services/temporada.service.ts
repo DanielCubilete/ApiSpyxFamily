@@ -20,7 +20,9 @@ export class TemporadaService {
   }
 
   getById(id: string): Observable<ApiResponse<Temporada>> {
-    return this.http.get<ApiResponse<Temporada>>(`${this.apiUrl}/${id}`);
+    const url = `${this.apiUrl}/${id}`;
+    console.log('📞 TemporadaService.getById() ->', url);
+    return this.http.get<ApiResponse<Temporada>>(url);
   }
 
   getByNumero(numero: number): Observable<ApiResponse<Temporada>> {

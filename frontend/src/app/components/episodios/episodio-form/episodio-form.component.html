@@ -1,0 +1,191 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-lg-8 offset-lg-2">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h3 class="mb-0">
+            <i class="bi bi-film"></i>
+            {{ isEditMode ? 'Editar Episodio' : 'Nuevo Episodio' }}
+          </h3>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="episodioForm" (ngSubmit)="onSubmit()">
+            
+            <!-- Número de Episodio y Título -->
+            <div class="row mb-3">
+              <div class="col-md-3">
+                <label for="numero_episodio" class="form-label">Número de Episodio *</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  id="numero_episodio"
+                  formControlName="numero_episodio"
+                  [class.is-invalid]="submitted && f['numero_episodio'].errors"
+                  min="1">
+                <div *ngIf="submitted && f['numero_episodio'].errors" class="invalid-feedback">
+                  <div *ngIf="f['numero_episodio'].errors['required']">El número de episodio es requerido</div>
+                  <div *ngIf="f['numero_episodio'].errors['min']">Debe ser al menos 1</div>
+                </div>
+              </div>
+              <div class="col-md-9">
+                <label for="titulo" class="form-label">Título *</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="titulo"
+                  formControlName="titulo"
+                  [class.is-invalid]="submitted && f['titulo'].errors"
+                  placeholder="Ej: Operación Strix">
+                <div *ngIf="submitted && f['titulo'].errors" class="invalid-feedback">
+                  <div *ngIf="f['titulo'].errors['required']">El título es requerido</div>
+                  <div *ngIf="f['titulo'].errors['minlength']">Mínimo 3 caracteres</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Temporada -->
+            <div class="mb-3">
+              <label for="temporada_id" class="form-label">Temporada *</label>
+              <select 
+                class="form-select" 
+                id="temporada_id"
+                formControlName="temporada_id"
+                [class.is-invalid]="submitted && f['temporada_id'].errors">
+                <option value="">Selecciona una temporada</option>
+                <option *ngFor="let temporada of temporadas" [value]="temporada._id">
+                  Temporada {{ temporada.numero_temporada }}: {{ temporada.titulo }}
+                </option>
+              </select>
+              <div *ngIf="submitted && f['temporada_id'].errors" class="invalid-feedback">
+                <div *ngIf="f['temporada_id'].errors['required']">La temporada es requerida</div>
+              </div>
+            </div>
+
+            <!-- Descripción -->
+            <div class="mb-3">
+              <label for="descripcion" class="form-label">Descripción *</label>
+              <textarea 
+                class="form-control" 
+                id="descripcion"
+                formControlName="descripcion"
+                [class.is-invalid]="submitted && f['descripcion'].errors"
+                rows="3"
+                placeholder="Descripción breve del episodio..."></textarea>
+              <div *ngIf="submitted && f['descripcion'].errors" class="invalid-feedback">
+                <div *ngIf="f['descripcion'].errors['required']">La descripción es requerida</div>
+                <div *ngIf="f['descripcion'].errors['minlength']">Mínimo 10 caracteres</div>
+              </div>
+            </div>
+
+            <!-- Sinopsis -->
+            <div class="mb-3">
+              <label for="sinopsis" class="form-label">Sinopsis</label>
+              <textarea 
+                class="form-control" 
+                id="sinopsis"
+                formControlName="sinopsis"
+                rows="4"
+                placeholder="Sinopsis detallada del episodio (opcional)..."></textarea>
+            </div>
+
+            <!-- Duración y Fecha de Emisión -->
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="duracion_minutos" class="form-label">Duración (minutos) *</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  id="duracion_minutos"
+                  formControlName="duracion_minutos"
+                  [class.is-invalid]="submitted && f['duracion_minutos'].errors"
+                  min="1"
+                  max="180"
+                  placeholder="24">
+                <div *ngIf="submitted && f['duracion_minutos'].errors" class="invalid-feedback">
+                  <div *ngIf="f['duracion_minutos'].errors['required']">La duración es requerida</div>
+                  <div *ngIf="f['duracion_minutos'].errors['min']">Mínimo 1 minuto</div>
+                  <div *ngIf="f['duracion_minutos'].errors['max']">Máximo 180 minutos</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="fecha_emision" class="form-label">Fecha de Emisión *</label>
+                <input 
+                  type="date" 
+                  class="form-control" 
+                  id="fecha_emision"
+                  formControlName="fecha_emision"
+                  [class.is-invalid]="submitted && f['fecha_emision'].errors">
+                <div *ngIf="submitted && f['fecha_emision'].errors" class="invalid-feedback">
+                  <div *ngIf="f['fecha_emision'].errors['required']">La fecha de emisión es requerida</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Director y Guionista -->
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="director" class="form-label">Director</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="director"
+                  formControlName="director"
+                  placeholder="Nombre del director">
+              </div>
+              <div class="col-md-6">
+                <label for="guionista" class="form-label">Guionista</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="guionista"
+                  formControlName="guionista"
+                  placeholder="Nombre del guionista">
+              </div>
+            </div>
+
+            <!-- Valoración y URL de Imagen -->
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <label for="valoracion" class="form-label">Valoración (0-10)</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  id="valoracion"
+                  formControlName="valoracion"
+                  [class.is-invalid]="submitted && f['valoracion'].errors"
+                  min="0"
+                  max="10"
+                  step="0.1"
+                  placeholder="0.0">
+                <div *ngIf="submitted && f['valoracion'].errors" class="invalid-feedback">
+                  <div *ngIf="f['valoracion'].errors['min']">Mínimo 0</div>
+                  <div *ngIf="f['valoracion'].errors['max']">Máximo 10</div>
+                </div>
+              </div>
+              <div class="col-md-8">
+                <label for="imagen_url" class="form-label">URL de Imagen</label>
+                <input 
+                  type="url" 
+                  class="form-control" 
+                  id="imagen_url"
+                  formControlName="imagen_url"
+                  placeholder="https://ejemplo.com/imagen.jpg">
+              </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="d-flex justify-content-end gap-2 mt-4">
+              <button type="button" class="btn btn-secondary" (click)="cancelar()">
+                <i class="bi bi-x-circle"></i> Cancelar
+              </button>
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-save"></i>
+                {{ isEditMode ? 'Actualizar' : 'Crear' }} Episodio
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -25,12 +25,12 @@ export class SharedService {
 
   showLoading() {
     console.log('📢 SharedService.showLoading() - Setting loading to TRUE');
-    setTimeout(() => this.loadingSubject.next(true), 0);
+    this.loadingSubject.next(true);
   }
 
   hideLoading() {
     console.log('📢 SharedService.hideLoading() - Setting loading to FALSE');
-    setTimeout(() => this.loadingSubject.next(false), 0);
+    this.loadingSubject.next(false);
   }
 
   showSuccess(message: string) {

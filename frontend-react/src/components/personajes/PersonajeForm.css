@@ -1,0 +1,44 @@
+.personaje-form-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.habilidad-badge {
+  font-size: 0.9rem;
+  padding: 0.5rem 0.75rem;
+  margin: 0.25rem;
+}
+
+.btn-close-white {
+  background-color: transparent;
+  border: none;
+  opacity: 0.8;
+}
+
+.btn-close-white:hover {
+  opacity: 1;
+}
+
+.img-thumbnail {
+  border: 2px solid #dee2e6;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .personaje-form-container {
+    padding: 0 1rem;
+  }
+}

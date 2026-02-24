@@ -1,6 +1,10 @@
 
 // Configuración base de la API
-const API_BASE_URL = 'http://localhost:3000/api/v1';
+// En producción Vercel sirve el backend en /api, en desarrollo usa localhost
+const API_BASE_URL = process.env.REACT_APP_API_URL || 
+                     (process.env.NODE_ENV === 'production' 
+                       ? '/api/v1' 
+                       : 'http://localhost:3000/api/v1');
 
 // Función auxiliar para manejar respuestas
 const handleResponse = async (response) => {

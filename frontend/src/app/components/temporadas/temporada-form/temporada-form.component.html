@@ -1,0 +1,189 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-lg-8 offset-lg-2">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h3 class="mb-0">
+            <i class="bi bi-tv"></i>
+            {{ isEditMode ? 'Editar Temporada' : 'Nueva Temporada' }}
+          </h3>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="temporadaForm" (ngSubmit)="onSubmit()">
+            
+            <!-- Número de Temporada y Título -->
+            <div class="row mb-3">
+              <div class="col-md-3">
+                <label for="numero_temporada" class="form-label">Número de Temporada *</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  id="numero_temporada"
+                  formControlName="numero_temporada"
+                  [class.is-invalid]="submitted && f['numero_temporada'].errors"
+                  min="1">
+                <div *ngIf="submitted && f['numero_temporada'].errors" class="invalid-feedback">
+                  <div *ngIf="f['numero_temporada'].errors['required']">El número de temporada es requerido</div>
+                  <div *ngIf="f['numero_temporada'].errors['min']">Debe ser al menos 1</div>
+                </div>
+              </div>
+              <div class="col-md-9">
+                <label for="titulo" class="form-label">Título *</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="titulo"
+                  formControlName="titulo"
+                  [class.is-invalid]="submitted && f['titulo'].errors"
+                  placeholder="Ej: SPY×FAMILY Season 1">
+                <div *ngIf="submitted && f['titulo'].errors" class="invalid-feedback">
+                  <div *ngIf="f['titulo'].errors['required']">El título es requerido</div>
+                  <div *ngIf="f['titulo'].errors['minlength']">Mínimo 3 caracteres</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Descripción -->
+            <div class="mb-3">
+              <label for="descripcion" class="form-label">Descripción *</label>
+              <textarea 
+                class="form-control" 
+                id="descripcion"
+                formControlName="descripcion"
+                [class.is-invalid]="submitted && f['descripcion'].errors"
+                rows="4"
+                placeholder="Descripción de la temporada..."></textarea>
+              <div *ngIf="submitted && f['descripcion'].errors" class="invalid-feedback">
+                <div *ngIf="f['descripcion'].errors['required']">La descripción es requerida</div>
+                <div *ngIf="f['descripcion'].errors['minlength']">Mínimo 10 caracteres</div>
+              </div>
+            </div>
+
+            <!-- Estudio y Director -->
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="estudio_animacion" class="form-label">Estudio de Animación *</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="estudio_animacion"
+                  formControlName="estudio_animacion"
+                  [class.is-invalid]="submitted && f['estudio_animacion'].errors"
+                  placeholder="Ej: Wit Studio, CloverWorks">
+                <div *ngIf="submitted && f['estudio_animacion'].errors" class="invalid-feedback">
+                  <div *ngIf="f['estudio_animacion'].errors['required']">El estudio es requerido</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="director" class="form-label">Director</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="director"
+                  formControlName="director"
+                  placeholder="Nombre del director">
+              </div>
+            </div>
+
+            <!-- Fechas -->
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="fecha_estreno" class="form-label">Fecha de Estreno *</label>
+                <input 
+                  type="date" 
+                  class="form-control" 
+                  id="fecha_estreno"
+                  formControlName="fecha_estreno"
+                  [class.is-invalid]="submitted && f['fecha_estreno'].errors">
+                <div *ngIf="submitted && f['fecha_estreno'].errors" class="invalid-feedback">
+                  <div *ngIf="f['fecha_estreno'].errors['required']">La fecha de estreno es requerida</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="fecha_finalizacion" class="form-label">Fecha de Finalización</label>
+                <input 
+                  type="date" 
+                  class="form-control" 
+                  id="fecha_finalizacion"
+                  formControlName="fecha_finalizacion">
+              </div>
+            </div>
+
+            <!-- Número de Episodios y Estado -->
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <label for="numero_episodios" class="form-label">Número de Episodios *</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  id="numero_episodios"
+                  formControlName="numero_episodios"
+                  [class.is-invalid]="submitted && f['numero_episodios'].errors"
+                  min="1">
+                <div *ngIf="submitted && f['numero_episodios'].errors" class="invalid-feedback">
+                  <div *ngIf="f['numero_episodios'].errors['required']">El número de episodios es requerido</div>
+                  <div *ngIf="f['numero_episodios'].errors['min']">Debe ser al menos 1</div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label for="estado" class="form-label">Estado *</label>
+                <select 
+                  class="form-select" 
+                  id="estado"
+                  formControlName="estado"
+                  [class.is-invalid]="submitted && f['estado'].errors">
+                  <option value="">Selecciona un estado</option>
+                  <option value="emitida">Emitida</option>
+                  <option value="en emisión">En emisión</option>
+                  <option value="anunciada">Anunciada</option>
+                </select>
+                <div *ngIf="submitted && f['estado'].errors" class="invalid-feedback">
+                  <div *ngIf="f['estado'].errors['required']">El estado es requerido</div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label for="valoracion" class="form-label">Valoración (0-10)</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  id="valoracion"
+                  formControlName="valoracion"
+                  [class.is-invalid]="submitted && f['valoracion'].errors"
+                  min="0"
+                  max="10"
+                  step="0.1"
+                  placeholder="0.0">
+                <div *ngIf="submitted && f['valoracion'].errors" class="invalid-feedback">
+                  <div *ngIf="f['valoracion'].errors['min']">Mínimo 0</div>
+                  <div *ngIf="f['valoracion'].errors['max']">Máximo 10</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- URL de Imagen -->
+            <div class="mb-3">
+              <label for="imagen_url" class="form-label">URL de Imagen</label>
+              <input 
+                type="url" 
+                class="form-control" 
+                id="imagen_url"
+                formControlName="imagen_url"
+                placeholder="https://ejemplo.com/imagen.jpg">
+            </div>
+
+            <!-- Botones -->
+            <div class="d-flex justify-content-end gap-2 mt-4">
+              <button type="button" class="btn btn-secondary" (click)="cancelar()">
+                <i class="bi bi-x-circle"></i> Cancelar
+              </button>
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-save"></i>
+                {{ isEditMode ? 'Actualizar' : 'Crear' }} Temporada
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

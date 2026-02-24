@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { finalize } from 'rxjs/operators';
 import { EpisodioService } from '../../../services/episodio.service';
 import { TemporadaService } from '../../../services/temporada.service';
 import { SharedService } from '../../../services/shared.service';
@@ -66,25 +67,28 @@ export class EpisodioListComponent implements OnInit {
   cargarEpisodios() {
     console.log('🔄 Cargando episodios desde API...');
     this.sharedService.showLoading();
-    this.episodioService.getAll().subscribe({
-      next: (response) => {
-        console.log('✅ Respuesta recibida:', response);
-        console.log('🔄 Llamando a hideLoading()...');
-        this.sharedService.hideLoading();
-        if (response.success && response.data) {
-          console.log(`✅ ${response.data.length} episodios cargados`);
-          this.episodios = response.data;
-          this.aplicarFiltros();
-        } else {
-          console.warn('⚠️ Respuesta sin datos válidos:', response);
+    
+    this.episodioService.getAll()
+      .pipe(
+        finalize(() => this.sharedService.hideLoading())
+      )
+      .subscribe({
+        next: (response) => {
+          console.log('✅ Respuesta recibida:', response);
+          if (response.success && response.data) {
+            console.log(`✅ ${response.data.length} episodios cargados`);
+            this.episodios = response.data;
+            this.aplicarFiltros();
+            setTimeout(() => this.cdr.detectChanges(), 0);
+          } else {
+            console.warn('⚠️ Respuesta sin datos válidos:', response);
+          }
+        },
+        error: (error) => {
+          console.error('❌ Error al cargar episodios:', error);
+          this.sharedService.showError('Error al cargar episodios');
         }
-      },
-      error: (error) => {
-        console.error('❌ Error al cargar episodios:', error);
-        this.sharedService.hideLoading();
-        this.sharedService.showError('Error al cargar episodios');
-      }
-    });
+      });
   }
 
   aplicarFiltros() {
@@ -122,7 +126,6 @@ export class EpisodioListComponent implements OnInit {
     const start = (this.currentPage - 1) * this.itemsPerPage;
     const end = start + this.itemsPerPage;
     this.episodiosPaginados = this.episodiosFiltrados.slice(start, end);
-    this.cdr.detectChanges();
     console.log(`📄 Página ${this.currentPage}: mostrando ${this.episodiosPaginados.length} episodios (${start}-${end})`);
   }
 
@@ -137,30 +140,44 @@ export class EpisodioListComponent implements OnInit {
     this.router.navigate(['/episodios', id]);
   }
 
+  editar(id: string) {
+    this.router.navigate(['/episodios/editar', id]);
+  }
+
   eliminar(episodio: Episodio) {
     if (!episodio._id) return;
 
     if (confirm(`¿Estás seguro de eliminar "${episodio.titulo}"?`)) {
       this.sharedService.showLoading();
-      this.episodioService.delete(episodio._id).subscribe({
-        next: (response) => {
-          this.sharedService.hideLoading();
-          if (response.success) {
-            this.sharedService.showSuccess('Episodio eliminado correctamente');
-            this.cargarEpisodios();
+      
+      this.episodioService.delete(episodio._id)
+        .pipe(
+          finalize(() => this.sharedService.hideLoading())
+        )
+        .subscribe({
+          next: (response) => {
+            if (response.success) {
+              this.sharedService.showSuccess('Episodio eliminado correctamente');
+              this.cargarEpisodios();
+            }
+          },
+          error: (error) => {
+            this.sharedService.showError('Error al eliminar episodio');
+            console.error(error);
           }
-        },
-        error: (error) => {
-          this.sharedService.hideLoading();
-          this.sharedService.showError('Error al eliminar episodio');
-          console.error(error);
-        }
-      });
+        });
     }
   }
 
   getTemporadaTitulo(temporada: any): string {
     return temporada?.titulo || 'Temporada ' + temporada?.numero_temporada || 'N/A';
+  }
+
+  getTemporadaNumero(episodio: Episodio): string {
+    if (typeof episodio.temporada_id === 'object' && episodio.temporada_id !== null) {
+      return 'T' + ((episodio.temporada_id as any).numero_temporada || 'N/A');
+    }
+    return 'N/A';
   }
 
   limpiarFiltros() {
@@ -171,23 +188,5 @@ export class EpisodioListComponent implements OnInit {
       queryParams: {},
     });
     this.aplicarFiltros();
-  }
-
-  getImagenEpisodio(episodio: Episodio): string {
-    if (episodio.imagen_url) {
-      return episodio.imagen_url;
-    }
-    
-    // Obtener el número de temporada del episodio
-    let numeroTemporada = 1;
-    if (typeof episodio.temporada_id === 'object' && episodio.temporada_id !== null) {
-      numeroTemporada = (episodio.temporada_id as any).numero_temporada || 1;
-    }
-    
-    return `https://picsum.photos/seed/spyxfamily-t${numeroTemporada}e${episodio.numero_episodio}/400/250`;
-  }
-
-  onImageError(event: any): void {
-    event.target.src = 'https://via.placeholder.com/400x250/6c757d/ffffff?text=Episodio';
   }
 }

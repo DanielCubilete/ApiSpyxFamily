@@ -1,6 +1,9 @@
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>📺 Temporadas</h2>
+    <button class="btn btn-primary" routerLink="/temporadas/nueva">
+      <i class="bi bi-plus-lg"></i> Nueva Temporada
+    </button>
   </div>
 
   <!-- Filtros -->
@@ -41,13 +44,16 @@
   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-4">
     <div class="col" *ngFor="let temporada of temporadasPaginadas">
       <div class="card h-100">
-        <img 
-          [src]="getImagenTemporada(temporada)" 
-          class="card-img-top" 
-          [alt]="temporada.titulo"
-          style="height: 300px; object-fit: cover; cursor: pointer;"
-          (error)="onImageError($event)"
-          (click)="verDetalle(temporada._id!)">
+        <div class="image-frame">
+          <img 
+            [src]="getImagenTemporada(temporada)" 
+            class="card-img-top" 
+            [alt]="temporada.titulo"
+            style="height: 300px; object-fit: cover; cursor: pointer;"
+            (error)="onImageError($event)"
+            (click)="verDetalle(temporada._id || '')"
+            [class.disabled]="!temporada._id">
+        </div>
         <div class="card-body">
           <h5 class="card-title">{{ temporada.titulo }}</h5>
           <p class="card-text">{{ temporada.descripcion | slice:0:100 }}{{ temporada.descripcion.length > 100 ? '...' : '' }}</p>
@@ -64,26 +70,21 @@
             <div *ngIf="temporada.valoracion"><strong>⭐ Valoración:</strong> {{ temporada.valoracion }}/10</div>
           </div>
         </div>
-        <div class="card-footer bg-transparent">
-          <div class="d-flex justify-content-between mb-2">
+        <div class="card-footer bg-transparent border-0 pt-0">
+          <div class="d-grid gap-2">
             <button 
-              class="btn btn-sm btn-primary w-100"
-              (click)="verEpisodios(temporada._id!)">
-              <i class="bi bi-collection-play"></i> Ver Episodios
-            </button>
-          </div>
-          <div class="d-flex justify-content-between">
-            <button 
-              class="btn btn-sm btn-info" 
-              (click)="verDetalle(temporada._id!)"
-              title="Ver detalle">
-              <i class="bi bi-eye"></i> Ver
+              class="btn btn-outline-primary btn-action"
+              (click)="verEpisodios(temporada._id || '')"
+              [disabled]="!temporada._id">
+              <i class="bi bi-collection-play-fill me-2"></i>
+              Ver Episodios
             </button>
             <button 
-              class="btn btn-sm btn-danger" 
-              (click)="eliminar(temporada)"
-              title="Eliminar">
-              <i class="bi bi-trash"></i> Eliminar
+              class="btn btn-outline-info btn-action" 
+              (click)="verDetalle(temporada._id || '')"
+              [disabled]="!temporada._id">
+              <i class="bi bi-eye-fill me-2"></i>
+              Ver Detalle
             </button>
           </div>
         </div>

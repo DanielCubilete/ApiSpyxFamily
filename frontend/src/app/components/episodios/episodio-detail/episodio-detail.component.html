@@ -48,7 +48,7 @@
       <div class="wiki-main-content">
         <section class="wiki-section">
           <h2 class="wiki-section-title">Sinopsis</h2>
-          <p class="wiki-text">{{ episodio.descripcion }}</p>
+          <p class="wiki-text">{{ episodio.sinopsis || episodio.descripcion }}</p>
         </section>
 
         <section class="wiki-section">
@@ -93,7 +93,7 @@
     </div>
   </div>
 
-  <div class="wiki-alert" *ngIf="!episodio">
+  <div class="wiki-alert" *ngIf="!isLoading && loadError">
     <strong>⚠️ Episodio no encontrado</strong>
     <p>El episodio que buscas no existe o ha sido eliminado.</p>
     <button class="wiki-btn wiki-btn-secondary" (click)="volver()">

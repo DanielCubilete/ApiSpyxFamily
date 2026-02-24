@@ -21,6 +21,7 @@ export interface Episodio {
   numero_episodio: number;
   titulo: string;
   descripcion: string;
+  sinopsis?: string;
   duracion_minutos: number;
   fecha_emision: Date | string;
   imagen_url?: string;

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import personajeService from '../../services/personajeService';
 import Loading from '../Loading';
+import './PersonajeList.css';
 
 const PersonajeList = () => {
+  const navigate = useNavigate();
   const [personajes, setPersonajes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -65,9 +67,6 @@ const PersonajeList = () => {
     <div className="container mt-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2>👥 Personajes</h2>
-        <Link to="/personajes/nuevo" className="btn btn-primary">
-          <i className="bi bi-plus-lg"></i> Nuevo Personaje
-        </Link>
       </div>
 
       {error && (
@@ -119,16 +118,26 @@ const PersonajeList = () => {
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
           {personajesFiltrados.map((personaje) => (
             <div key={personaje._id} className="col">
-              <div className="card h-100">
-                <img
-                  src={getImagenPersonaje(personaje)}
-                  className="card-img-top"
-                  alt={personaje.nombre}
-                  style={{ height: '300px', objectFit: 'cover' }}
-                  onError={(e) => {
-                    e.target.src = `https://via.placeholder.com/400x500/667EEA/ffffff?text=${personaje.nombre}`;
-                  }}
-                />
+              <div 
+                className="card h-100"
+                onClick={(e) => {
+                  // Evitar navegación si se hace click en botones
+                  if (!e.target.closest('button') && !e.target.closest('a')) {
+                    navigate(`/personajes/${personaje._id}`);
+                  }
+                }}
+                style={{ cursor: 'pointer' }}
+              >
+                <div className="image-frame">
+                  <img
+                    src={getImagenPersonaje(personaje)}
+                    className="card-img-top"
+                    alt={personaje.nombre}
+                    onError={(e) => {
+                      e.target.src = `https://via.placeholder.com/400x500/667EEA/ffffff?text=${personaje.nombre}`;
+                    }}
+                  />
+                </div>
                 <div className="card-body">
                   <h5 className="card-title">{personaje.nombre}</h5>
                   {personaje.alias && (
@@ -170,25 +179,13 @@ const PersonajeList = () => {
                   </p>
                 </div>
                 <div className="card-footer bg-white border-top">
-                  <div className="d-flex justify-content-between">
+                  <div className="d-flex justify-content-center">
                     <Link
                       to={`/personajes/${personaje._id}`}
-                      className="btn btn-sm btn-info"
+                      className="btn btn-sm btn-info w-100"
                     >
-                      <i className="bi bi-eye"></i> Ver
+                      <i className="bi bi-eye"></i> Ver Detalle
                     </Link>
-                    <Link
-                      to={`/personajes/editar/${personaje._id}`}
-                      className="btn btn-sm btn-warning"
-                    >
-                      <i className="bi bi-pencil"></i> Editar
-                    </Link>
-                    <button
-                      className="btn btn-sm btn-danger"
-                      onClick={() => handleDelete(personaje._id, personaje.nombre)}
-                    >
-                      <i className="bi bi-trash"></i>
-                    </button>
                   </div>
                 </div>
               </div>
