@@ -9,3 +9,82 @@
   <p>Bienvenido a la documentación de la API. Consulta los endpoints en <code>/api/v1/Documentacion</code>.</p>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>API Spy x Family - Documentación</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2em; }
+    h1, h2, h3 { color: #2c3e50; }
+    table { border-collapse: collapse; width: 100%; margin-bottom: 2em; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background: #f4f4f4; }
+    code { background: #f9f9f9; padding: 2px 4px; border-radius: 3px; }
+    .endpoint { font-weight: bold; color: #2980b9; }
+  </style>
+</head>
+<body>
+  <h1>Documentación de la API Spy x Family</h1>
+  <h2>Información General</h2>
+  <ul>
+    <li><b>Base URL:</b> <code>/api/v1</code></li>
+    <li><b>Formato de Respuesta:</b> JSON</li>
+    <li><b>Content-Type:</b> <code>application/json</code></li>
+  </ul>
+
+  <h2>Endpoints principales</h2>
+  <table>
+    <tr><th>Recurso</th><th>Endpoint</th><th>Método</th><th>Descripción</th></tr>
+    <tr><td>Documentación</td><td><code>/api/v1/Documentacion</code></td><td>GET</td><td>Información general y listado de endpoints</td></tr>
+    <tr><td>Temporadas</td><td><code>/api/v1/temporadas</code></td><td>GET</td><td>Obtener todas las temporadas</td></tr>
+    <tr><td>Temporadas</td><td><code>/api/v1/temporadas/:id</code></td><td>GET</td><td>Obtener temporada por ID</td></tr>
+    <tr><td>Temporadas</td><td><code>/api/v1/temporadas/numero/:numero</code></td><td>GET</td><td>Obtener temporada por número</td></tr>
+    <tr><td>Temporadas</td><td><code>/api/v1/temporadas/estadisticas</code></td><td>GET</td><td>Obtener estadísticas de temporadas</td></tr>
+    <tr><td>Temporadas</td><td><code>/api/v1/temporadas</code></td><td>POST</td><td>Crear nueva temporada</td></tr>
+    <tr><td>Temporadas</td><td><code>/api/v1/temporadas/:id</code></td><td>PUT</td><td>Actualizar temporada</td></tr>
+    <tr><td>Temporadas</td><td><code>/api/v1/temporadas/:id</code></td><td>DELETE</td><td>Eliminar temporada</td></tr>
+    <tr><td>Episodios</td><td><code>/api/v1/episodios</code></td><td>GET</td><td>Obtener todos los episodios</td></tr>
+    <tr><td>Episodios</td><td><code>/api/v1/episodios/:id</code></td><td>GET</td><td>Obtener episodio por ID</td></tr>
+    <tr><td>Episodios</td><td><code>/api/v1/episodios/temporada/:temporadaId</code></td><td>GET</td><td>Obtener episodios por temporada</td></tr>
+    <tr><td>Episodios</td><td><code>/api/v1/episodios</code></td><td>POST</td><td>Crear nuevo episodio</td></tr>
+    <tr><td>Episodios</td><td><code>/api/v1/episodios/:id</code></td><td>PUT</td><td>Actualizar episodio</td></tr>
+    <tr><td>Episodios</td><td><code>/api/v1/episodios/:id</code></td><td>DELETE</td><td>Eliminar episodio</td></tr>
+    <tr><td>Personajes</td><td><code>/api/v1/personajes</code></td><td>GET</td><td>Obtener todos los personajes</td></tr>
+    <tr><td>Personajes</td><td><code>/api/v1/personajes/:id</code></td><td>GET</td><td>Obtener personaje por ID</td></tr>
+    <tr><td>Personajes</td><td><code>/api/v1/personajes/rol/:rol</code></td><td>GET</td><td>Obtener personajes por rol</td></tr>
+    <tr><td>Personajes</td><td><code>/api/v1/personajes</code></td><td>POST</td><td>Crear nuevo personaje</td></tr>
+    <tr><td>Personajes</td><td><code>/api/v1/personajes/:id</code></td><td>PUT</td><td>Actualizar personaje</td></tr>
+    <tr><td>Personajes</td><td><code>/api/v1/personajes/:id</code></td><td>DELETE</td><td>Eliminar personaje</td></tr>
+    <tr><td>Tomos</td><td><code>/api/v1/tomos</code></td><td>GET</td><td>Obtener todos los tomos</td></tr>
+    <tr><td>Tomos</td><td><code>/api/v1/tomos/:id</code></td><td>GET</td><td>Obtener tomo por ID</td></tr>
+    <tr><td>Tomos</td><td><code>/api/v1/tomos</code></td><td>POST</td><td>Crear nuevo tomo</td></tr>
+    <tr><td>Tomos</td><td><code>/api/v1/tomos/:id</code></td><td>PUT</td><td>Actualizar tomo</td></tr>
+    <tr><td>Tomos</td><td><code>/api/v1/tomos/:id</code></td><td>DELETE</td><td>Eliminar tomo</td></tr>
+  </table>
+
+  <h2>Ejemplo de uso</h2>
+  <h3>Obtener todas las temporadas</h3>
+  <pre><code>GET /api/v1/temporadas</code></pre>
+  <h3>Crear nueva temporada</h3>
+  <pre><code>POST /api/v1/temporadas
+Content-Type: application/json
+{
+  "numero_temporada": 4,
+  "titulo": "Temporada 4",
+  "descripcion": "Descripción de la temporada",
+  "fecha_estreno": "2025-01-15",
+  "numero_episodios": 12,
+  "estudio_animacion": "Wit Studio, CloverWorks",
+  "estado": "anunciada"
+}</code></pre>
+  <h3>Actualizar temporada</h3>
+  <pre><code>PUT /api/v1/temporadas/:id
+Content-Type: application/json</code></pre>
+  <h3>Eliminar temporada</h3>
+  <pre><code>DELETE /api/v1/temporadas/:id</code></pre>
+
+  <h3>Más ejemplos y detalles</h3>
+  <p>Consulta la <b>Documentación JSON</b> en <code>/api/v1/Documentacion</code> para ver todos los endpoints y respuestas detalladas.</p>
+</body>
+</html>
