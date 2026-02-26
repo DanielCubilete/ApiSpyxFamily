@@ -17,6 +17,7 @@ const allowedOrigins = [
     'http://localhost:4200',
     'https://api-spyx-family-odt6wb5zp-daniels-projects-83665ae7.vercel.app',
     'https://api-spyx-family-app.vercel.app',
+    'https://api-spyx-family-a0ve7puiq-daniels-projects-83665ae7.vercel.app', // Dominio backend actual
     'https://api-spyx-family-lsawxnk8q-daniels-projects-83665ae7.vercel.app', // Dominio frontend actual
     /^https:\/\/.*\.vercel\.app$/ // Todos los subdominios de Vercel
 ];
