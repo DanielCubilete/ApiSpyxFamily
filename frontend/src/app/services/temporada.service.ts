@@ -7,7 +7,7 @@ import { Temporada, ApiResponse } from '../models/interfaces';
   providedIn: 'root'
 })
 export class TemporadaService {
-  private apiUrl = 'http://localhost:3000/api/v1/temporadas';
+  private apiUrl = (window as any).env?.API_URL_TEMPORADAS || '/api/v1/temporadas';
 
   constructor(private http: HttpClient) { 
     console.log('🔧 TemporadaService inicializado');

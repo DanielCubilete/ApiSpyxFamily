@@ -7,7 +7,7 @@ import { Personaje, ApiResponse } from '../models/interfaces';
   providedIn: 'root'
 })
 export class PersonajeService {
-  private apiUrl = 'http://localhost:3000/api/v1/personajes';
+  private apiUrl = (window as any).env?.API_URL_PERSONAJES || '/api/v1/personajes';
 
   constructor(private http: HttpClient) { 
     console.log('🔧 PersonajeService inicializado');

@@ -1,17 +1,9 @@
-require('dotenv').config();
-const app = require('./app');
-const connectDB = require('./src/config/database');
 
-// Conectar a la base de datos (solo una vez por cold start en serverless)
-let isConnected = false;
-async function ensureDBConnection() {
-    if (!isConnected) {
-        await connectDB();
-        isConnected = true;
-    }
-}
 
-module.exports = async (req, res) => {
-    await ensureDBConnection();
-    app(req, res);
-};
+const mongoose = require('mongoose');
+const URI = process.env.MONGODB_URI || 'mongodb+srv://admin:vgZILaxgmRpOwzt9@cluster0.6gr9ofh.mongodb.net/spyxfamily?retryWrites=true&w=majority';
+mongoose.connect(URI)
+    .then(() => console.log('DB is connected'))
+    .catch(err => console.error(err));
+
+module.exports = mongoose;

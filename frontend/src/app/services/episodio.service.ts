@@ -7,7 +7,7 @@ import { Episodio, ApiResponse } from '../models/interfaces';
   providedIn: 'root'
 })
 export class EpisodioService {
-  private apiUrl = 'http://localhost:3000/api/v1/episodios';
+  private apiUrl = (window as any).env?.API_URL_EPISODIOS || '/api/v1/episodios';
 
   constructor(private http: HttpClient) { }
 

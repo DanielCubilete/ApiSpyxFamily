@@ -7,7 +7,7 @@ import { Tomo, ApiResponse } from '../models/interfaces';
   providedIn: 'root'
 })
 export class TomoService {
-  private apiUrl = 'http://localhost:3000/api/v1/tomos';
+  private apiUrl = (window as any).env?.API_URL_TOMOS || '/api/v1/tomos';
 
   constructor(private http: HttpClient) { 
     console.log('🔧 TomoService inicializado');
