@@ -38,8 +38,18 @@ const corsOptions = {
     allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
 };
 
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // Preflight para todos los endpoints
+// Configuración CORS simple y universal
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:4200',
+    'https://api-spyx-family-odt6wb5zp-daniels-projects-83665ae7.vercel.app',
+    'https://api-spyx-family-app.vercel.app',
+    /^https:\/\/.*\.vercel\.app$/
+  ],
+  credentials: true
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
