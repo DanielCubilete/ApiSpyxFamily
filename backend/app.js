@@ -38,8 +38,8 @@ const corsOptions = {
     allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
 };
 
-// CORS temporal: permitir todos los orígenes para depuración
-app.use(cors({ origin: true, credentials: true }));
+// CORS: permitir solo orígenes definidos y Vercel
+app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
