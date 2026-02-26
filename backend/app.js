@@ -10,48 +10,37 @@ const episodioRoutes = require('./src/routes/episodio.routes');
 const personajeRoutes = require('./src/routes/personaje.routes');
 const tomoRoutes = require('./src/routes/tomo.routes');
 
-// Configuración CORS
+// Configuración CORS mejorada
+const allowedOrigins = [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:4200',
+    'https://api-spyx-family-odt6wb5zp-daniels-projects-83665ae7.vercel.app',
+    'https://api-spyx-family-app.vercel.app',
+    /^https:\/\/.*\.vercel\.app$/ // Todos los subdominios de Vercel
+];
+
 const corsOptions = {
     origin: function (origin, callback) {
-        // Permitir peticiones sin origin (Postman, curl, etc.) y desde dominios permitidos
-        const allowedOrigins = [
-            'http://localhost:3000',
-            'http://localhost:3001',
-            'http://localhost:4200',
-            'https://api-spyx-family-odt6wb5zp-daniels-projects-83665ae7.vercel.app',
-            'https://api-spyx-family-app.vercel.app',
-            /^https:\/\/.*\.vercel\.app$/ // Todos los subdominios de Vercel
-        ];
-        
         if (!origin) return callback(null, true);
-        
         const isAllowed = allowedOrigins.some(allowed => {
             if (allowed instanceof RegExp) return allowed.test(origin);
             return allowed === origin;
         });
-        
         if (isAllowed) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
         }
     },
-    credentials: true
+    credentials: true,
+    methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
 };
 
-// Middlewares
 app.use(cors(corsOptions));
-// Forzar header CORS manualmente para todas las respuestas
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    if (req.method === 'OPTIONS') {
-        return res.sendStatus(200);
-    }
-    next();
-});
+app.options('*', cors(corsOptions)); // Preflight para todos los endpoints
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
