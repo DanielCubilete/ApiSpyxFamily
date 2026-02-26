@@ -11,37 +11,8 @@ const personajeRoutes = require('./src/routes/personaje.routes');
 const tomoRoutes = require('./src/routes/tomo.routes');
 
 // Configuración CORS mejorada
-const allowedOrigins = [
-    'http://localhost:3000',
-    'http://localhost:3001',
-    'http://localhost:4200',
-    'https://api-spyx-family-odt6wb5zp-daniels-projects-83665ae7.vercel.app',
-    'https://api-spyx-family-app.vercel.app',
-    'https://api-spyx-family-a0ve7puiq-daniels-projects-83665ae7.vercel.app', // Dominio backend actual
-    'https://api-spyx-family-lsawxnk8q-daniels-projects-83665ae7.vercel.app', // Dominio frontend actual
-    /^https:\/\/.*\.vercel\.app$/ // Todos los subdominios de Vercel
-];
-
-const corsOptions = {
-    origin: function (origin, callback) {
-        if (!origin) return callback(null, true);
-        const isAllowed = allowedOrigins.some(allowed => {
-            if (allowed instanceof RegExp) return allowed.test(origin);
-            return allowed === origin;
-        });
-        if (isAllowed) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    credentials: true,
-    methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
-};
-
-// CORS: permitir solo orígenes definidos y Vercel
-app.use(cors(corsOptions));
+// CORS: permitir todos los orígenes
+app.use(cors({ origin: true, credentials: true }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
