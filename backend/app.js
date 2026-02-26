@@ -17,7 +17,8 @@ const allowedOrigins = [
     'https://api-spyx-family-app.vercel.app',
     'http://localhost:3000',
     'http://localhost:3001',
-    'http://localhost:4200'
+    'http://localhost:4200',
+    'https://api-spyx-family-app.vercel.app' // URL exacta del frontend
 ];
 const corsOptions = {
     origin: function (origin, callback) {
