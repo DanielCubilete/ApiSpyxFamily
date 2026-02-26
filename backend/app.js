@@ -20,18 +20,8 @@ const allowedOrigins = [
     'http://localhost:4200',
     'https://api-spyx-family-app.vercel.app' // URL exacta del frontend
 ];
-const corsOptions = {
-    origin: function (origin, callback) {
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    credentials: true
-};
-app.use(cors(corsOptions));
+// CORS: permitir todos los orígenes
+app.use(cors({ origin: true, credentials: true }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
