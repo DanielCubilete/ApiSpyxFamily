@@ -43,10 +43,6 @@ function App() {
                   {/* Rutas de Temporadas */}
                   <Route path="/temporadas" element={<TemporadaList />} />
                   <Route path="/temporadas/nueva" element={<TemporadaForm />} />
-                  <Route path="/temporadas/editar/:id" element={<TemporadaForm />} />
-                  <Route path="/temporadas/:id" element={<TemporadaDetail />} />
-                  {/* Rutas de Personajes */}
-                  <Route path="/personajes" element={<PersonajeList />} />
                   <Route path="/personajes/nuevo" element={<PersonajeForm />} />
                   <Route path="/personajes/editar/:id" element={<PersonajeForm />} />
                   <Route path="/personajes/:id" element={<PersonajeDetail />} />
@@ -59,6 +55,10 @@ function App() {
                 </Routes>
               </div>
             </Router>
+          );
+        }
+
+        export default App;
           );
 }
 
