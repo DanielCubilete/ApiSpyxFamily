@@ -1,10 +1,7 @@
 
 // Configuración base de la API
 // En producción Vercel sirve el backend en /api, en desarrollo usa localhost
-const API_BASE_URL = process.env.REACT_APP_API_URL || 
-                     (process.env.NODE_ENV === 'production' 
-                       ? '/api/v1' 
-                       : 'https://api-spyx-family.vercel.app/');
+const API_BASE_URL = 'https://api-spyx-family.vercel.app/api/v1';
 
 // Función auxiliar para manejar respuestas
 const handleResponse = async (response) => {
