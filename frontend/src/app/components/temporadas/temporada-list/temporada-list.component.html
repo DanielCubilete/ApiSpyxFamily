@@ -86,6 +86,20 @@
               <i class="bi bi-eye-fill me-2"></i>
               Ver Detalle
             </button>
+             <button 
+               class="btn btn-outline-warning btn-action"
+               (click)="editar(temporada._id || '')"
+               [disabled]="!temporada._id">
+               <i class="bi bi-pencil-square me-2"></i>
+               Editar
+             </button>
+             <button 
+               class="btn btn-outline-danger btn-action"
+               (click)="eliminar(temporada)"
+               [disabled]="!temporada._id">
+               <i class="bi bi-trash me-2"></i>
+               Eliminar
+             </button>
           </div>
         </div>
       </div>
