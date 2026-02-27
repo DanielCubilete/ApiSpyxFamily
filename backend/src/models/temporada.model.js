@@ -59,7 +59,7 @@ const temporadaSchema = new mongoose.Schema({
 });
 
 // Índices para mejorar el rendimiento
-temporadaSchema.index({ numero_temporada: 1 });
+// El índice de numero_temporada ya está definido por unique: true
 temporadaSchema.index({ estado: 1 });
 
 module.exports = mongoose.model('Temporada', temporadaSchema);

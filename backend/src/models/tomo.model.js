@@ -82,7 +82,7 @@ const tomoSchema = new mongoose.Schema({
 
 // Índices para mejorar el rendimiento
 tomoSchema.index({ numero_tomo: 1 });
-tomoSchema.index({ isbn: 1 });
+// El índice de isbn ya está definido por unique: true
 tomoSchema.index({ fecha_publicacion: 1 });
 
 module.exports = mongoose.model('Tomo', tomoSchema);
