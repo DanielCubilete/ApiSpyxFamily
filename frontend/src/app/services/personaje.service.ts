@@ -7,7 +7,11 @@ import { Personaje, ApiResponse } from '../models/interfaces';
   providedIn: 'root'
 })
 export class PersonajeService {
-  private apiUrl = (window as any).env?.API_URL_PERSONAJES || '/api/v1/personajes';
+  private apiUrl =
+    (window as any).env?.API_URL_PERSONAJES ||
+    (typeof window !== 'undefined' && window.location.hostname.endsWith('vercel.app')
+      ? 'https://api-spyx-family.vercel.app/api/v1/personajes'
+      : '/api/v1/personajes');
 
   constructor(private http: HttpClient) { 
     console.log('🔧 PersonajeService inicializado');

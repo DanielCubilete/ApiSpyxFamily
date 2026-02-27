@@ -7,7 +7,11 @@ import { Episodio, ApiResponse } from '../models/interfaces';
   providedIn: 'root'
 })
 export class EpisodioService {
-  private apiUrl = (window as any).env?.API_URL_EPISODIOS || '/api/v1/episodios';
+  private apiUrl =
+    (window as any).env?.API_URL_EPISODIOS ||
+    (typeof window !== 'undefined' && window.location.hostname.endsWith('vercel.app')
+      ? 'https://api-spyx-family.vercel.app/api/v1/episodios'
+      : '/api/v1/episodios');
 
   constructor(private http: HttpClient) { }
 

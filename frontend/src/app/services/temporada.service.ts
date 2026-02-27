@@ -7,7 +7,11 @@ import { Temporada, ApiResponse } from '../models/interfaces';
   providedIn: 'root'
 })
 export class TemporadaService {
-  private apiUrl = (window as any).env?.API_URL_TEMPORADAS || '/api/v1/temporadas';
+  private apiUrl =
+    (window as any).env?.API_URL_TEMPORADAS ||
+    (typeof window !== 'undefined' && window.location.hostname.endsWith('vercel.app')
+      ? 'https://api-spyx-family.vercel.app/api/v1/temporadas'
+      : '/api/v1/temporadas');
 
   constructor(private http: HttpClient) { 
     console.log('🔧 TemporadaService inicializado');
