@@ -22,4 +22,9 @@ export class NavbarComponent {
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
+
+  closeDropdownAndCollapse() {
+    this.isDropdownOpen = false;
+    this.isCollapsed = true;
+  }
 }
