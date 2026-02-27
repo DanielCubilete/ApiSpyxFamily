@@ -1,5 +1,5 @@
 const express = require('express');
-const cors = require('cors');
+
 const path = require('path');
 
 const app = express();
@@ -21,7 +21,7 @@ const allowedOrigins = [
     'https://api-spyx-family-app.vercel.app' // URL exacta del frontend
 ];
 // CORS: permitir cualquier origen
-app.use(cors());
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -108,14 +108,4 @@ app.use((req, res) => {
 
 module.exports = app;
 
-// Ejemplo de uso del fetch
-const url = `${process.env.REACT_APP_API_URL}/temporadas`;
 
-fetch(url)
-  .then(response => response.json())
-  .then(data => {
-    console.log('Temporadas:', data);
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
