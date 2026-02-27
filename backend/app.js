@@ -1,8 +1,11 @@
+
 const express = require('express');
-
 const path = require('path');
-
 const app = express();
+
+// Habilitar CORS para permitir cualquier origen
+const cors = require('cors');
+app.use(cors());
 
 // Importar rutas
 const temporadaRoutes = require('./src/routes/temporada.routes');
