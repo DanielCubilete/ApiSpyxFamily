@@ -11,9 +11,6 @@ const personajeRoutes = require('./src/routes/personaje.routes');
 const tomoRoutes = require('./src/routes/tomo.routes');
 
 
-// CORS: permitir cualquier origen
-const cors = require('cors');
-app.use(cors());
 
 
 app.use(express.json());
