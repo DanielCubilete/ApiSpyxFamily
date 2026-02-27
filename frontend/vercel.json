@@ -2,5 +2,5 @@
   "rewrites": [
     { "source": "/api/(.*)", "destination": "https://api-spyx-family.vercel.app/api/$1" }
   ],
-  "outputDirectory": "dist/frontend"
+  "outputDirectory": "dist/frontend/browser"
 }
