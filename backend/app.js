@@ -10,17 +10,10 @@ const episodioRoutes = require('./src/routes/episodio.routes');
 const personajeRoutes = require('./src/routes/personaje.routes');
 const tomoRoutes = require('./src/routes/tomo.routes');
 
-// Configuración CORS mejorada
-// CORS: permitir solo frontend y backend oficiales
-const allowedOrigins = [
-    'https://api-spyx-family.vercel.app',
-    'https://api-spyx-family-app.vercel.app',
-    'http://localhost:3000',
-    'http://localhost:3001',
-    'http://localhost:4200',
-    'https://api-spyx-family-app.vercel.app' // URL exacta del frontend
-];
+
 // CORS: permitir cualquier origen
+const cors = require('cors');
+app.use(cors());
 
 
 app.use(express.json());
