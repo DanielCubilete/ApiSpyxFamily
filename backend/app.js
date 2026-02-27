@@ -107,3 +107,15 @@ app.use((req, res) => {
 });
 
 module.exports = app;
+
+// Ejemplo de uso del fetch
+const url = `${process.env.REACT_APP_API_URL}/temporadas`;
+
+fetch(url)
+  .then(response => response.json())
+  .then(data => {
+    console.log('Temporadas:', data);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
